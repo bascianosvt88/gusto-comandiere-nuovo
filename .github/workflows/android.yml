@@ -24,12 +24,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configura Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Installa strumenti Android
-        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
-
       - name: Estrai progetto Android
         run: |
           unzip -q GustoComandiereAndroid.zip -d android-progetto
