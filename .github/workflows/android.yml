@@ -1,4 +1,3 @@
-
 name: Build Gusto Comandiere APK
 
 on:
@@ -16,22 +15,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Scarica il progetto
+      - name: Scarica il repository
         uses: actions/checkout@v4
 
       - name: Configura Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Configura Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          packages: platform-tools
+        uses: android-actions/setup-android@v3
 
       - name: Installa strumenti Android
         run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Estrai progetto Android
+        run: |
+          unzip -q GustoComandiereAndroid.zip -d android-progetto
+          find android-progetto -name settings.gradle -o -name settings.gradle.kts
 
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -39,11 +41,12 @@ jobs:
           gradle-version: '8.9'
 
       - name: Compila APK
+        working-directory: android-progetto
         run: gradle assembleDebug
 
       - name: Pubblica APK
         uses: actions/upload-artifact@v4
         with:
           name: gusto-comandiere-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: android-progetto/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
