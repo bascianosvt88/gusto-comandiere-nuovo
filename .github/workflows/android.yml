@@ -24,8 +24,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Verifica archivio Android
+        run: |
+          test -f GustoComandiereAndroid.zip
+          unzip -l GustoComandiereAndroid.zip
+
       - name: Estrai progetto Android
         run: |
+          mkdir -p android-progetto
           unzip -q GustoComandiereAndroid.zip -d android-progetto
           find android-progetto -name settings.gradle -o -name settings.gradle.kts
 
