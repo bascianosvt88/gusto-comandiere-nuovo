@@ -1,3 +1,4 @@
+
 name: Build Gusto Comandiere APK
 
 on:
@@ -24,23 +25,53 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Verifica archivio Android
+      - name: Verifica archivio e nuovo HTML
         run: |
           test -f GustoComandiereAndroid.zip
+          test -f Comandiere_Gusto_nuovo.html
           unzip -l GustoComandiereAndroid.zip
 
       - name: Estrai progetto Android
         run: |
           mkdir -p android-progetto
           unzip -q GustoComandiereAndroid.zip -d android-progetto
+
           GRADLE_DIR="android-progetto/GustoComandiereAndroid"
-          if [ ! -f "$GRADLE_DIR/settings.gradle" ] && [ ! -f "$GRADLE_DIR/settings.gradle.kts" ]; then
-            echo "ERRORE: non trovo settings.gradle nel percorso: $GRADLE_DIR"
+
+          if [ ! -f "$GRADLE_DIR/settings.gradle" ] && \
+             [ ! -f "$GRADLE_DIR/settings.gradle.kts" ]; then
+            echo "ERRORE: progetto Gradle non trovato"
             find android-progetto -maxdepth 5 -type f | head -100
             exit 1
           fi
+
           echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
-          echo "Progetto Gradle trovato in: $GRADLE_DIR"
+
+      - name: Sostituisci HTML dentro Android
+        run: |
+          GRADLE_DIR="android-progetto/GustoComandiereAndroid"
+
+          mapfile -t FILES < <(
+            find "$GRADLE_DIR" -type f \
+            -path '*/src/main/assets/index.html'
+          )
+
+          if [ "${#FILES[@]}" -ne 1 ]; then
+            echo "ERRORE: trovato un numero inatteso di index.html:"
+            printf '%s\n' "${FILES[@]}"
+            exit 1
+          fi
+
+          DEST="${FILES[0]}"
+
+          echo "Sostituzione del file: $DEST"
+
+          cp Comandiere_Gusto_nuovo.html "$DEST"
+
+          echo "Verifica nuovo HTML:"
+          grep -i -m 1 '<title>' "$DEST"
+
+          echo "Nuovo HTML inserito correttamente."
 
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v4
