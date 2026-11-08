@@ -41,13 +41,13 @@ jobs:
           if [ ! -f "$GRADLE_DIR/settings.gradle" ] && \
              [ ! -f "$GRADLE_DIR/settings.gradle.kts" ]; then
             echo "ERRORE: progetto Gradle non trovato"
-            find android-progetto -maxdepth 5 -type f | head -100
+            find android-progetto -maxdepth 6 -type f | head -150
             exit 1
           fi
 
           echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
 
-      - name: Sostituisci HTML dentro Android
+      - name: Sostituisci tutti gli HTML Android
         run: |
           GRADLE_DIR="android-progetto/GustoComandiereAndroid"
 
@@ -56,22 +56,24 @@ jobs:
             -path '*/src/main/assets/index.html'
           )
 
-          if [ "${#FILES[@]}" -ne 1 ]; then
-            echo "ERRORE: trovato un numero inatteso di index.html:"
-            printf '%s\n' "${FILES[@]}"
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo "ERRORE: nessun index.html trovato"
             exit 1
           fi
 
-          DEST="${FILES[0]}"
+          echo "Trovati ${#FILES[@]} file index.html"
 
-          echo "Sostituzione del file: $DEST"
+          for DEST in "${FILES[@]}"; do
+            echo "Aggiorno: $DEST"
+            cp Comandiere_Gusto_nuovo.html "$DEST"
 
-          cp Comandiere_Gusto_nuovo.html "$DEST"
+            if ! cmp -s Comandiere_Gusto_nuovo.html "$DEST"; then
+              echo "ERRORE: verifica sostituzione fallita"
+              exit 1
+            fi
+          done
 
-          echo "Verifica nuovo HTML:"
-          grep -i -m 1 '<title>' "$DEST"
-
-          echo "Nuovo HTML inserito correttamente."
+          echo "Tutti i file index.html sono stati aggiornati."
 
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v4
