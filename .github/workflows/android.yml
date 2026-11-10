@@ -1,11 +1,10 @@
-
 name: Build Gusto Comandiere APK
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - principale
+      - main
 
 permissions:
   contents: read
@@ -29,8 +28,11 @@ jobs:
         run: |
           test -f GustoComandiereAndroid.zip
           test -f gusto-comandiere-nuovo.html
+
           echo "HTML nuovo trovato:"
           ls -lh gusto-comandiere-nuovo.html
+
+          echo "Verifica archivio Android:"
           unzip -l GustoComandiereAndroid.zip
 
       - name: Estrai progetto Android
@@ -55,7 +57,7 @@ jobs:
 
           mapfile -t FILES < <(
             find "$GRADLE_DIR" -type f \
-            -path '*/src/main/assets/index.html'
+            -path '*/app/src/main/assets/index.html'
           )
 
           if [ "${#FILES[@]}" -eq 0 ]; then
@@ -73,6 +75,9 @@ jobs:
               echo "ERRORE: verifica sostituzione fallita"
               exit 1
             fi
+
+            echo "VERIFICATO: $DEST contiene il nuovo HTML"
+            wc -c "$DEST"
           done
 
           echo "Tutti i file index.html sono stati aggiornati correttamente."
