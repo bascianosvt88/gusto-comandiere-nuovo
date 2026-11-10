@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - principale
 
 permissions:
   contents: read
@@ -28,7 +28,9 @@ jobs:
       - name: Verifica archivio e nuovo HTML
         run: |
           test -f GustoComandiereAndroid.zip
-          test -f Comandiere_Gusto_nuovo.html
+          test -f gusto-comandiere-nuovo.html
+          echo "HTML nuovo trovato:"
+          ls -lh gusto-comandiere-nuovo.html
           unzip -l GustoComandiereAndroid.zip
 
       - name: Estrai progetto Android
@@ -47,7 +49,7 @@ jobs:
 
           echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
 
-      - name: Sostituisci tutti gli HTML Android
+      - name: Sostituisci HTML Android con la versione nuova
         run: |
           GRADLE_DIR="android-progetto/GustoComandiereAndroid"
 
@@ -65,15 +67,15 @@ jobs:
 
           for DEST in "${FILES[@]}"; do
             echo "Aggiorno: $DEST"
-            cp Comandiere_Gusto_nuovo.html "$DEST"
+            cp gusto-comandiere-nuovo.html "$DEST"
 
-            if ! cmp -s Comandiere_Gusto_nuovo.html "$DEST"; then
+            if ! cmp -s gusto-comandiere-nuovo.html "$DEST"; then
               echo "ERRORE: verifica sostituzione fallita"
               exit 1
             fi
           done
 
-          echo "Tutti i file index.html sono stati aggiornati."
+          echo "Tutti i file index.html sono stati aggiornati correttamente."
 
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v4
