@@ -449,6 +449,57 @@ body.gusto-table-order-composer-active #appView #orderView:not(.hidden)>#orderCa
 /* Nasconde il controllo persone/coperti dalla barra superiore delle uscite. Il controllo nel riepilogo a destra resta invariato. */
 body.gusto-table-order-composer-active #orderView #coverControls{display:none!important}
 </style>
+
+
+<style id="gusto-reservations-scroll-clean">
+/* Prenotazioni: schermata senza barre superiori e con scorrimento verticale completo. */
+body.gusto-reservations-active{
+  overflow:hidden!important;
+}
+body.gusto-reservations-active #appView{
+  min-height:0!important;
+  overflow:hidden!important;
+}
+body.gusto-reservations-active #appView>.gusto-main-toolbar,
+body.gusto-reservations-active #appView>.navtabs{
+  display:none!important;
+}
+body.gusto-reservations-active #reservationsView{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:100%!important;
+  max-height:100%!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  padding-bottom:24px!important;
+}
+body.gusto-reservations-active #reservationsView>.panel{
+  margin:0!important;
+  min-height:100%!important;
+  overflow:visible!important;
+}
+body.gusto-reservations-active #reservationsView .calendar-panel{
+  margin:0 0 12px!important;
+}
+body.gusto-reservations-active #reservationsView #reservationAvailableTables{
+  padding-bottom:18px;
+}
+
+/* Pulsante sempre raggiungibile per tornare alla schermata principale. */
+body.gusto-reservations-active #reservationsView .reservation-back-bar{
+  position:sticky;top:0;z-index:20;margin:-2px -2px 12px;padding:6px 2px 9px;
+  background:var(--white);
+}
+#reservationsView .reservation-back-btn{
+  width:100%;min-height:44px;text-align:left;padding:10px 14px;
+  background:var(--green);color:#fff;border-radius:11px;font-weight:800;
+}
+
+</style>
 </head><body>
 <header class="top"><div class="toprow"><div class="brand">GUSTO <small>IL PIACERE IN TAVOLA · COMANDIERE</small></div><div id="who" class="muted">Accesso operatore</div></div></header>
 <main class="wrap">
@@ -464,7 +515,7 @@ body.gusto-table-order-composer-active #orderView #coverControls{display:none!im
 
 
 <div class="navtabs"><button id="tabTablesBtn" class="active" onclick="showComandiereTab('tables')">🍽️ Tavoli e comande</button><button id="tabReservationsBtn" onclick="showComandiereTab('reservations')">📅 Prenotazioni</button><button id="tabTakeawayBtn" onclick="beginTakeawayOrder()">🛍️ Asporto</button><button id="tabHistoryBtn" onclick="showComandiereTab('history')">📚 Storico giornaliero</button></div>
-<div id="reservationsView" class="hidden"><section class="panel"><div class="hrow"><div><h1>📅 Prenotazioni tavoli</h1><p class="muted">Scegli il giorno dal calendario, poi tocca un tavolo per inserire nome, persone, orario e note. Puoi aggiungere altri tavoli alla stessa prenotazione.</p></div><button class="primary" onclick="startReservationFromTab()">＋ Nuova prenotazione</button></div><div class="calendar-panel"><div class="calendar-heading"><button aria-label="Mese precedente" onclick="changeReservationMonth(-1)">‹</button><strong id="reservationCalendarMonth">Ottobre 2026</strong><button aria-label="Mese successivo" onclick="changeReservationMonth(1)">›</button><button class="calendar-today" onclick="goReservationToday()">Oggi</button></div><div id="reservationCalendarDays" class="calendar-days" aria-label="Giorni del mese"></div><p class="muted" id="reservationCalendarHint" style="margin:8px 2px 0">Seleziona un giorno per la prenotazione.</p></div><section class="panel" style="padding:12px;margin:12px 0"><h2 style="margin-bottom:6px">🪑 Tavoli e prenotazioni</h2><p class="muted">Ogni tavolo mostra qui la prenotazione e il turno. Scegli uno dei quattro turni direttamente nel riquadro del tavolo libero.</p><div id="reservationAvailableTables" class="reservation-grid"></div></section><div id="reservationTurnFilters" class="hidden" aria-hidden="true"><button id="lunchTurn1Btn" onclick="selectReservationTurn('pranzo',1)"></button><button id="lunchTurn2Btn" onclick="selectReservationTurn('pranzo',2)"></button><button id="dinnerTurn1Btn" onclick="selectReservationTurn('cena',1)"></button><button id="dinnerTurn2Btn" onclick="selectReservationTurn('cena',2)"></button></div><p id="reservationTurnHint" class="hidden"></p><div id="reservationTableGrid" class="hidden"></div></section></div>
+<div id="reservationsView" class="hidden"><section class="panel"><div class="reservation-back-bar"><button type="button" class="reservation-back-btn" onclick="showComandiereTab('tables')">← Torna al Comandiere</button></div><div class="calendar-panel"><div class="calendar-heading"><button aria-label="Mese precedente" onclick="changeReservationMonth(-1)">‹</button><strong id="reservationCalendarMonth">Ottobre 2026</strong><button aria-label="Mese successivo" onclick="changeReservationMonth(1)">›</button><button class="calendar-today" onclick="goReservationToday()">Oggi</button></div><div id="reservationCalendarDays" class="calendar-days" aria-label="Giorni del mese"></div><p class="muted" id="reservationCalendarHint" style="margin:8px 2px 0">Seleziona un giorno per la prenotazione.</p></div><section class="panel" style="padding:12px;margin:12px 0"><h2 style="margin-bottom:6px">🪑 Tavoli e prenotazioni</h2><p class="muted">Ogni tavolo mostra qui la prenotazione e il turno. Scegli uno dei quattro turni direttamente nel riquadro del tavolo libero.</p><div id="reservationAvailableTables" class="reservation-grid"></div></section><div id="reservationTurnFilters" class="hidden" aria-hidden="true"><button id="lunchTurn1Btn" onclick="selectReservationTurn('pranzo',1)"></button><button id="lunchTurn2Btn" onclick="selectReservationTurn('pranzo',2)"></button><button id="dinnerTurn1Btn" onclick="selectReservationTurn('cena',1)"></button><button id="dinnerTurn2Btn" onclick="selectReservationTurn('cena',2)"></button></div><p id="reservationTurnHint" class="hidden"></p><div id="reservationTableGrid" class="hidden"></div></section></div>
 <div id="tableView"><div class="navtabs" style="margin:12px 0"><button id="areaSalaBtn" class="active" onclick="setTableAreaView('sala')">🏠 Sala interna · Tavoli 1–6</button><button id="areaPedanaBtn" onclick="setTableAreaView('pedana')">🌿 Pedana · Tavoli 7–12</button></div><div class="tables-online-layout"><div class="tables-column"><div class="stats"><div class="stat"><span class="muted">Tavoli liberi</span><b id="freeCount">—</b></div><div class="stat"><span class="muted">In servizio</span><b id="busyCount">—</b></div><div class="stat"><span class="muted">Operatore</span><b id="staffCount">1</b></div></div><div id="tables" class="tables"></div></div><section id="gustoOnlineOrders" class="panel" style="margin:14px 0;border:2px solid #b7d900">
  <div class="hrow" style="align-items:center;justify-content:space-between;flex-wrap:wrap">
   <div><h2 style="margin:0">🛍️ Ordini App Cliente</h2></div>
@@ -756,7 +807,7 @@ function renderReservationCalendar(){const title=$("reservationCalendarMonth"),d
 function selectReservationDate(key){const [y,m,d]=key.split("-").map(Number);reservationSelectedDate=new Date(y,m-1,d);reservationSelectedDate.setHours(0,0,0,0);reservationCalendarMonth=new Date(y,m-1,1);renderReservationCalendar();renderReservationTables();loadRemoteTableReservations()}
 function changeReservationMonth(delta){reservationCalendarMonth=new Date(reservationCalendarMonth.getFullYear(),reservationCalendarMonth.getMonth()+delta,1);const y=reservationCalendarMonth.getFullYear(),m=reservationCalendarMonth.getMonth();const day=Math.min(reservationSelectedDate.getDate(),new Date(y,m+1,0).getDate());reservationSelectedDate=new Date(y,m,day);reservationSelectedDate.setHours(0,0,0,0);renderReservationCalendar();renderReservationTables();loadRemoteTableReservations()}
 function goReservationToday(){const now=new Date();reservationCalendarMonth=new Date(now.getFullYear(),now.getMonth(),1);reservationSelectedDate=new Date(now.getFullYear(),now.getMonth(),now.getDate());reservationSelectedDate.setHours(0,0,0,0);renderReservationCalendar();renderReservationTables();loadRemoteTableReservations()}
-function showComandiereTab(tab){const reservations=tab==='reservations',history=tab==='history';$('tableView').classList.toggle('hidden',reservations||history);$('reservationsView').classList.toggle('hidden',!reservations);$('historyView').classList.toggle('hidden',!history);$('tabTablesBtn').classList.toggle('active',!reservations&&!history);$('tabReservationsBtn').classList.toggle('active',reservations);$('tabHistoryBtn')?.classList.toggle('active',history);if(reservations){$('tabReservationsBtn').classList.remove('reservation-tab-alert');renderReservationCalendar();renderReservationTables();loadRemoteTableReservations()}if(history){const f=$('gustoHistoryDate');if(f&&!f.value)f.value=new Date().toLocaleDateString('en-CA');gustoLoadDailyHistory()}}
+function showComandiereTab(tab){const reservations=tab==='reservations',history=tab==='history';document.body.classList.toggle('gusto-reservations-active',reservations);$('tableView').classList.toggle('hidden',reservations||history);$('reservationsView').classList.toggle('hidden',!reservations);$('historyView').classList.toggle('hidden',!history);$('tabTablesBtn').classList.toggle('active',!reservations&&!history);$('tabReservationsBtn').classList.toggle('active',reservations);$('tabHistoryBtn')?.classList.toggle('active',history);if(reservations){$('tabReservationsBtn').classList.remove('reservation-tab-alert');renderReservationCalendar();renderReservationTables();loadRemoteTableReservations()}if(history){const f=$('gustoHistoryDate');if(f&&!f.value)f.value=new Date().toLocaleDateString('en-CA');gustoLoadDailyHistory()}}
 async function loadRemoteTableReservations(){if(!user||!sb)return;try{const {data,error}=await sb.from('ordini').select('id,created_at,cliente_nome,indirizzo,stato,dettagli').eq('tipo_ordine','Prenotazione tavolo').order('created_at',{ascending:false}).limit(200);if(error)throw error;remoteTableReservations=(data||[]).map(row=>{let d=row.dettagli;try{if(typeof d==='string')d=JSON.parse(d||'{}')}catch{d={}};return {rowId:row.id,id:d.bookingId||String(row.id),name:d.name||row.cliente_nome||'Cliente',people:Number(d.covers)||2,time:d.bookingDateTime||((d.date&&d.time)?d.date+'T'+d.time+':00':null),notes:d.notes||'',tableNumber:Number(d.tableNumber),tableNumbers:[...new Set([d.tableNumber,...(Array.isArray(d.tableNumbers)?d.tableNumbers:[]),...(Array.isArray(d.groupNumbers)?d.groupNumbers:[])].filter(v=>v!==null&&v!==undefined).map(Number))],tableArea:d.tableArea||(Number(d.tableNumber)<=6?'sala':'pedana'),serviceSlot:((d.time||String(d.bookingDateTime||'').slice(11,16)||'').slice(0,5)),tableLabel:d.tableLabel||row.indirizzo,status:(d.status||row.stato||'new'),source:'app_cliente',dbId:row.id,released:!!(d.released||d.releasedAt)||/annull|cancell|cancel|deleted|liberat|released|servizio concluso/i.test(String(row.stato||''))}}).filter(r=>{if(!(r.tableNumber>0&&r.time&&!r.released))return false;const start=new Date(r.time).getTime();if(!Number.isFinite(start))return false;/* Non caricare nella schermata operativa prenotazioni remote già scadute: restano nel database, ma non devono bloccare i tavoli né aprire popup all'avvio. */return start+15*60*1000>Date.now()||dateKeyLocal(new Date(r.time))!==dateKeyLocal(new Date());});let fresh=remoteTableReservations.filter(r=>!seenRemoteReservationIds.has(String(r.dbId)));if(fresh.length){fresh.forEach(r=>seenRemoteReservationIds.add(String(r.dbId)));const tab=$('tabReservationsBtn');if(tab&&!document.getElementById('reservationsView').classList.contains('hidden')){}else if(tab)tab.classList.add('reservation-tab-alert');}const day=dateKeyLocal(reservationSelectedDate);for(const t of tables){const r=remoteTableReservations.find(x=>(x.tableNumbers||[x.tableNumber]).includes(Number(t.number))&&dateKeyLocal(new Date(x.time))===day&&!['cancelled','annullata','cancellata','liberato','released','prenotazione annullata','prenotazione liberata'].includes(String(x.status||'').toLowerCase()));if(r&&!tableBusy(t)&&(!t.reservation||t.reservation.source==='app_cliente'))t.reservation=r;}
 /* FIX: se una prenotazione condivisa include più tavoli, la pagina principale li mostra come un unico blocco, non come tavoli occupati separati. */
 for(const t of tables){if(t.reservation?.source==='app_cliente'){t.groupHiddenBy=null;t.groupNumbers=null;t.label=`${tableAreaLabel(t.number)} · Tavolo ${t.number}`;}}
