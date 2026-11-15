@@ -1,167 +1,208 @@
-
 name: Build Gusto Comandiere APK
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-      - principale
+workflow_dispatch:
+push:
+branches:
+- main
+- principale
 
 permissions:
-  contents: read
+contents: read
 
 jobs:
-  build:
-    name: Compila APK Gusto Comandiere
-    runs-on: ubuntu-latest
+build:
+name: Compila APK Gusto Comandiere
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Scarica repository
-        uses: actions/checkout@v4
+steps:
+  - name: Scarica repository
+    uses: actions/checkout@v4
 
-      - name: Configura Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+  - name: Configura Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Verifica file necessari
-        run: |
-          echo "Controllo archivio Android..."
-          test -f GustoComandiereAndroid.zip
+  - name: Verifica file necessari
+    run: |
+      set -e
 
-          echo "Controllo nuovo HTML..."
-          test -f gusto-comandiere-nuovo.html
+      echo "Controllo archivio Android..."
+      test -f GustoComandiereAndroid.zip
 
-          echo "File trovati correttamente:"
-          ls -lh GustoComandiereAndroid.zip
-          ls -lh gusto-comandiere-nuovo.html
+      echo "Controllo HTML Comandiere..."
+      test -f Comandiere_Gusto_nuovo.html
 
-      - name: Estrai progetto Android
-        run: |
-          mkdir -p android-progetto
+      echo "File trovati correttamente:"
+      ls -lh GustoComandiereAndroid.zip
+      ls -lh Comandiere_Gusto_nuovo.html
 
-          unzip -q GustoComandiereAndroid.zip -d android-progetto
+      echo "SHA256 HTML sorgente:"
+      sha256sum Comandiere_Gusto_nuovo.html
 
-          GRADLE_DIR="android-progetto/GustoComandiereAndroid"
+  - name: Estrai progetto Android
+    run: |
+      set -e
 
-          if [ ! -f "$GRADLE_DIR/settings.gradle" ]; then
-            echo "ERRORE: settings.gradle non trovato"
-            exit 1
-          fi
+      mkdir -p android-progetto
 
-          if [ ! -f "$GRADLE_DIR/build.gradle" ]; then
-            echo "ERRORE: build.gradle non trovato"
-            exit 1
-          fi
+      unzip -q GustoComandiereAndroid.zip -d android-progetto
 
-          if [ ! -f "$GRADLE_DIR/app/build.gradle" ]; then
-            echo "ERRORE: app/build.gradle non trovato"
-            exit 1
-          fi
+      GRADLE_DIR="android-progetto/GustoComandiereAndroid"
 
-          echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
+      if [ ! -f "$GRADLE_DIR/settings.gradle" ]; then
+        echo "ERRORE: settings.gradle non trovato"
+        exit 1
+      fi
 
-          echo "Progetto Android individuato correttamente."
+      if [ ! -f "$GRADLE_DIR/build.gradle" ]; then
+        echo "ERRORE: build.gradle non trovato"
+        exit 1
+      fi
 
-      - name: Verifica collegamento stampa Android
-        run: |
-          JAVA_FILE="android-progetto/GustoComandiereAndroid/app/src/main/java/it/gusto/comandiere/MainActivity.java"
+      if [ ! -f "$GRADLE_DIR/app/build.gradle" ]; then
+        echo "ERRORE: app/build.gradle non trovato"
+        exit 1
+      fi
 
-          if [ ! -f "$JAVA_FILE" ]; then
-            echo "ERRORE: MainActivity.java non trovato"
-            exit 1
-          fi
+      echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
 
-          if ! grep -q "GustoCleanter" "$JAVA_FILE"; then
-            echo "ERRORE: collegamento GustoCleanter non trovato"
-            exit 1
-          fi
+      echo "Progetto Android individuato correttamente."
 
-          echo "Collegamento alla stampa verificato."
+      echo "Progetti Gradle presenti:"
+      find android-progetto -name settings.gradle -print
 
-      - name: Aggiorna HTML del Comandiere
-        run: |
-          DEST="android-progetto/GustoComandiereAndroid/app/src/main/assets/index.html"
+  - name: Verifica collegamento stampa Android
+    run: |
+      set -e
 
-          if [ ! -f "$DEST" ]; then
-            echo "ERRORE: index.html Android non trovato"
-            exit 1
-          fi
+      JAVA_FILE="$GRADLE_DIR/app/src/main/java/it/gusto/comandiere/MainActivity.java"
 
-          echo "HTML originale:"
-          wc -c "$DEST"
+      if [ ! -f "$JAVA_FILE" ]; then
+        echo "ERRORE: MainActivity.java non trovato"
+        exit 1
+      fi
 
-          echo "Sostituzione con HTML nuovo..."
-          cp gusto-comandiere-nuovo.html "$DEST"
+      if ! grep -q "GustoCleanter" "$JAVA_FILE"; then
+        echo "ERRORE: collegamento GustoCleanter non trovato"
+        exit 1
+      fi
 
-          if ! cmp -s gusto-comandiere-nuovo.html "$DEST"; then
-            echo "ERRORE: sostituzione HTML non riuscita"
-            exit 1
-          fi
+      echo "Collegamento alla stampa verificato."
 
-          echo "HTML aggiornato e verificato:"
-          wc -c "$DEST"
+  - name: Aggiorna HTML del Comandiere
+    run: |
+      set -e
 
-          sha256sum "$DEST"
+      DEST="$GRADLE_DIR/app/src/main/assets/index.html"
 
-      - name: Configura Android SDK
-        run: |
-          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+      if [ ! -f "$DEST" ]; then
+        echo "ERRORE: index.html Android non trovato"
+        exit 1
+      fi
 
-          SDKMANAGER=$(find "$SDK_ROOT/cmdline-tools" \
-            -type f -name sdkmanager 2>/dev/null | sort -V | tail -n 1)
+      echo "HTML originale Android:"
+      wc -c "$DEST"
 
-          if [ -z "$SDKMANAGER" ]; then
-            echo "ERRORE: sdkmanager non trovato"
-            exit 1
-          fi
+      echo "Sostituzione con Comandiere_Gusto_nuovo.html..."
 
-          echo "Android SDK: $SDK_ROOT"
-          echo "SDK Manager: $SDKMANAGER"
+      cp Comandiere_Gusto_nuovo.html "$DEST"
 
-          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+      if ! cmp -s Comandiere_Gusto_nuovo.html "$DEST"; then
+        echo "ERRORE: sostituzione HTML non riuscita"
+        exit 1
+      fi
 
-          yes | "$SDKMANAGER" \
-            --sdk_root="$SDK_ROOT" \
-            --licenses || true
+      echo "HTML aggiornato correttamente:"
+      wc -c "$DEST"
 
-          "$SDKMANAGER" \
-            --sdk_root="$SDK_ROOT" \
-            --install \
-            "platforms;android-35" \
-            "build-tools;35.0.0" \
-            "platform-tools"
+      echo "SHA256 HTML Android:"
+      sha256sum "$DEST"
 
-          echo "Android SDK configurato correttamente."
+  - name: Configura Android SDK
+    run: |
+      set -e
 
-      - name: Configura Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+      SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
 
-      - name: Compila APK
-        working-directory: ${{ env.GRADLE_DIR }}
-        run: |
-          gradle assembleDebug --no-daemon
+      SDKMANAGER=$(find "$SDK_ROOT/cmdline-tools" \
+        -type f -name sdkmanager 2>/dev/null | sort -V | tail -n 1)
 
-      - name: Verifica APK completa
-        run: |
-          APK="android-progetto/GustoComandiereAndroid/app/build/outputs/apk/debug/app-debug.apk"
+      if [ -z "$SDKMANAGER" ]; then
+        echo "ERRORE: sdkmanager non trovato"
+        exit 1
+      fi
 
-          if [ ! -f "$APK" ]; then
-            echo "ERRORE: APK non generata"
-            exit 1
-          fi
+      echo "Android SDK: $SDK_ROOT"
+      echo "SDK Manager: $SDKMANAGER"
 
-          echo "APK generata correttamente:"
-          ls -lh "$APK"
+      echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+      echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
 
-      - name: Pubblica APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Gusto-Comandiere-APK
-          path: android-progetto/GustoComandiereAndroid/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+      yes | "$SDKMANAGER" \
+        --sdk_root="$SDK_ROOT" \
+        --licenses || true
+
+      "$SDKMANAGER" \
+        --sdk_root="$SDK_ROOT" \
+        --install \
+        "platforms;android-35" \
+        "build-tools;35.0.0" \
+        "platform-tools"
+
+      echo "Android SDK configurato correttamente."
+
+  - name: Configura Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.9'
+
+  - name: Pulisci compilazioni precedenti
+    working-directory: ${{ env.GRADLE_DIR }}
+    run: |
+      gradle clean --no-daemon
+
+  - name: Compila APK
+    working-directory: ${{ env.GRADLE_DIR }}
+    run: |
+      gradle assembleDebug --no-daemon
+
+  - name: Verifica APK e HTML incorporato
+    run: |
+      set -e
+
+      APK="$GRADLE_DIR/app/build/outputs/apk/debug/app-debug.apk"
+
+      if [ ! -f "$APK" ]; then
+        echo "ERRORE: APK non generata"
+        exit 1
+      fi
+
+      echo "APK generata correttamente:"
+      ls -lh "$APK"
+
+      echo "Controllo HTML incorporato nell'APK..."
+
+      unzip -p "$APK" assets/index.html > /tmp/index-apk.html
+
+      if ! cmp -s Comandiere_Gusto_nuovo.html /tmp/index-apk.html; then
+        echo "ERRORE: HTML nell'APK diverso dal file sorgente"
+        exit 1
+      fi
+
+      echo "VERIFICATO: HTML APK identico al file caricato."
+
+      echo "SHA256 HTML APK:"
+      sha256sum /tmp/index-apk.html
+
+      echo "SHA256 APK:"
+      sha256sum "$APK"
+
+  - name: Pubblica APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: Gusto-Comandiere-APK
+      path: android-progetto/GustoComandiereAndroid/app/build/outputs/apk/debug/app-debug.apk
+      if-no-files-found: error
