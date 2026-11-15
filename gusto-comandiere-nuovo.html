@@ -1,9 +1,195 @@
-<!doctype html>
-<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#163d2b"><title>Comandiere Gusto</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';s.onload=function(){if(window.initSupabaseFallback)window.initSupabaseFallback();};s.onerror=function(){var m=document.getElementById('loginMsg');if(m){m.textContent='Impossibile caricare il servizio di accesso. Controlla la connessione Internet e riapri il file.';m.classList.remove('hidden');m.classList.add('err');}};document.head.appendChild(s);})()"></script>
-<style>
-:root{--green:#17452f;--green2:#236342;--mint:#e6f2e9;--gold:#c9a45c;--ink:#18221b;--muted:#69756d;--line:#dce4dd;--bg:#f4f7f4;--white:#fff;--red:#b33b36;--orange:#a76110}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:12px 14px;font-weight:750;background:#edf2ee;color:var(--ink)}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--green);color:white}.gold{background:var(--gold);color:#241b0a}.danger{background:#fff0ee;color:var(--red)}.hidden{display:none!important}.top{background:var(--green);color:white;padding:17px 16px 14px;position:sticky;top:0;z-index:5;box-shadow:0 4px 18px #102e1e25}.toprow{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:21px;letter-spacing:.3px}.brand small{display:block;font-size:11px;letter-spacing:2px;color:#d7e5d9;font-weight:600}.muted{color:var(--muted);font-size:13px}.top .muted{color:#d5e4d9}.wrap{max-width:1050px;margin:auto;padding:16px}.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px #193c2610}.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1,h2,h3,p{margin-top:0}h1{font-size:23px;margin-bottom:5px}h2{font-size:18px;margin-bottom:12px}h3{font-size:16px;margin-bottom:6px}.login{max-width:430px;margin:8vh auto}.field{display:grid;gap:6px;margin:12px 0}.field label{font-weight:700;font-size:13px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink)}.navtabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.navtabs button{flex:1;min-width:130px}.navtabs button.active{background:var(--green);color:#fff}.calendar-panel{margin:14px 0 16px;padding:10px;border:1px solid var(--line);border-radius:14px;background:#f8fbf8}.calendar-heading{display:flex;align-items:center;gap:8px;margin-bottom:10px}.calendar-heading strong{flex:1;text-align:center;font-size:16px}.calendar-heading button{padding:7px 12px;min-width:38px}.calendar-heading .calendar-today{font-size:12px;padding:7px 10px;background:#e1eee4}.calendar-days{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 8px;scrollbar-width:thin}.calendar-day{flex:0 0 48px;min-width:48px;padding:7px 3px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}.calendar-day .weekday{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:800}.calendar-day .daynum{font-size:16px;font-weight:900}.calendar-day .monthday{font-size:9px;color:var(--muted)}.calendar-day.selected{background:var(--green);border-color:var(--green);color:#fff}.calendar-day.selected .weekday,.calendar-day.selected .monthday{color:#d9e8dd}.calendar-day.today:not(.selected){border:2px solid var(--gold)}
-.reservation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.reservation-table-card{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;text-align:left;min-height:100px}.reservation-table-card.booked{background:#fff4d6;border-color:#d9b65c}.reservation-table-card .booking-detail{display:block;margin-top:5px;font-size:12px;line-height:1.35;color:var(--ink);white-space:normal}.reservation-slots-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.reservation-slot-entry{min-width:0;padding:7px;border:1px solid var(--line);border-radius:10px;background:#fbfcfb}.reservation-slot-entry .slot-chip{width:100%;white-space:normal}.reservation-slot-entry .booking-detail{font-size:11px;overflow-wrap:anywhere}.reservation-slot-entry .slot-empty{color:var(--muted);font-size:10px}.reservation-slot-entry .booking-edit{width:100%;margin-top:5px;padding:7px 4px;font-size:10px;background:#e6f2e9;color:#17452f}.reservation-table-card .slot-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:10px}.reservation-table-card .slot-chip{display:block;padding:7px 5px;border:1px solid var(--line);border-radius:8px;background:#f7faf7;color:var(--ink);font-size:11px;font-weight:800;text-align:center;line-height:1.2}.reservation-table-card .slot-chip.selected{background:#236342;color:#fff;border-color:#236342}.reservation-table-card .slot-chip:disabled{opacity:1;cursor:default}.reservation-table-card .slot-chip.available{cursor:pointer}.reservation-table-card .booking-edit{width:100%;margin-top:8px;text-align:center;padding:8px;font-size:12px}.reservation-table-card strong{display:block;font-size:16px}.reservation-table-card small{display:block;color:var(--muted);margin-top:5px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.stat{background:#f5f8f5;border:1px solid var(--line);padding:10px;border-radius:12px}.stat b{display:block;font-size:20px}.tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.table{min-height:122px;text-align:left;touch-action:manipulation;user-select:none;-webkit-user-select:none;border:1px solid var(--line);background:white;padding:13px;border-radius:16px;display:flex;flex-direction:column;justify-content:space-between}.table h3{font-size:19px}.table.occupied{border-color:#d5b26b;background:#fffaf0}.table.ready{border-color:#9bc8a8;background:#f0f8f1}.table.pickup-alert{border:4px solid #c51f1a;background:#ffe1df;animation:pickupFlash .65s steps(2,end) infinite}.table.pickup-alert h3{color:#9f1712}.pickup-badge{cursor:pointer;user-select:none;display:block;margin-top:9px;padding:10px 9px;border:2px solid #8f100b;border-radius:10px;background:#c51f1a;color:#fff;font-size:13px;font-weight:950;line-height:1.25;text-align:center;animation:pickupFlash .55s steps(2,end) infinite;box-shadow:0 0 0 3px #c51f1a35}.table-hint{font-size:10px;color:var(--muted);margin-top:7px;font-weight:700}.sent-order-card{width:min(100%,760px);max-height:88vh;overflow:auto;background:white;border-radius:18px;padding:18px;box-shadow:0 18px 60px #0004}.sent-order-section{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}.sent-order-section h3{padding:10px 12px;margin:0;background:#e8efe9;border-left:4px solid var(--green)}.sent-order-section.drinks h3{background:#eaf2ff;border-left-color:#3869a8}.sent-order-line{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:11px 12px;border-top:1px solid var(--line)}.sent-order-line.ready{background:#fff0ed;border-left:5px solid #c51f1a}.sent-order-line.picked{background:#e5f5e8;border-left:5px solid #27834a}.sent-order-line .status{font-size:11px;font-weight:900;border-radius:99px;padding:4px 8px;white-space:nowrap;background:#edf2ee}.sent-order-line.ready .status{background:#c51f1a;color:white}.sent-order-line.picked .status{background:#d4f0dc;color:#1e6035}.sent-order-meta{font-size:12px;color:var(--muted);margin-top:3px}.context-overlay{position:fixed;inset:0;background:#0d1b1280;display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}.context-card{width:min(100%,380px);max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;background:white;border-radius:18px;padding:18px;box-shadow:0 18px 60px #0004}.context-overlay{overscroll-behavior:contain;touch-action:pan-y}.reservation-choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.reservation-choice{position:relative;display:block;min-width:0;cursor:pointer}.reservation-choice input{position:absolute;opacity:0;pointer-events:none}.reservation-choice span{display:flex;align-items:center;justify-content:center;min-height:58px;border:2px solid var(--line);border-radius:12px;background:#f8faf8;font-size:14px;font-weight:900;text-align:center;padding:5px}.reservation-choice input:checked+span{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 0 0 2px #17452f25}.reservation-choice input:disabled+span{opacity:.35;background:#eee}.reservation-choice input:focus-visible+span{outline:3px solid var(--gold);outline-offset:2px}.context-card button{width:100%;text-align:left;margin-top:9px;min-height:48px}.context-card .danger{background:#fff0ee;color:#b33b36}.pickup-items{font-size:12px;color:#8d2823;font-weight:700;margin-top:5px;line-height:1.35}.drink-checklist{margin-top:9px;padding:8px;background:#eaf2ff;border:1px solid #c5d8f4;border-radius:10px;cursor:default}.drink-check-title{font-size:11px;font-weight:900;color:#244e85;margin-bottom:5px}.drink-check{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 0;cursor:pointer}.drink-check input{width:17px;height:17px;accent-color:#236342;flex-shrink:0}.drink-check small{margin-left:auto;font-size:9px;color:#236342}.drink-check.delivered span{text-decoration:line-through;color:#63756a}@keyframes pickupPulse{0%,100%{box-shadow:0 0 0 0 #d63c3030;filter:brightness(1)}50%{box-shadow:0 0 0 4px #d63c3020;filter:brightness(.92)}}@keyframes pickupFlash{0%,100%{background:#ffe1df;border-color:#c51f1a;color:#9f1712;box-shadow:0 0 0 0 #c51f1a35}50%{background:#c51f1a;border-color:#ffb3ae;color:#fff;box-shadow:0 0 0 6px #c51f1a45}}.pill{display:inline-flex;border-radius:99px;padding:4px 9px;background:#edf2ee;font-size:11px;font-weight:800;align-self:flex-start}.pill.green{background:#e0f2e4;color:#1e6035}.pill.orange{background:#fff0d9;color:#92530b}.pill.red{background:#ffe8e5;color:#9b2e29}.count{display:flex;align-items:center;gap:14px}.count button{width:44px;height:44px;font-size:22px;padding:0}.count strong{font-size:24px;min-width:32px;text-align:center}.categories{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}.order-section-title{font-size:15px;font-weight:900;letter-spacing:.2px;padding:10px 12px;margin:12px 0 4px;background:#e8efe9;border-left:4px solid var(--green);border-radius:8px}.order-section-title.drinks{background:#eaf2ff;border-left-color:#3869a8}.course-tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.picker-course{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.picker-course button{flex:1;min-width:125px;border:1px solid var(--line);background:#f7faf7;text-align:left}.picker-course button.active{background:var(--green);color:#fff;border-color:var(--green)}.picker-intro{font-weight:850;margin:4px 0 8px}.step-number{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#e6f2e9;color:#17452f;margin-right:7px}.course-tools button{padding:9px 11px;font-size:13px}.cat{white-space:nowrap;border:1px solid var(--line);background:white}.cat.active{background:var(--green);color:white}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{border:1px solid var(--line);border-radius:14px;padding:11px;background:white;display:flex;flex-direction:column;gap:6px;min-width:0}.product .name{font-weight:800;line-height:1.25}.product .desc{font-size:12px;color:var(--muted);flex:1}.product .bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}.product .bottom button{padding:9px 12px}.line{padding:12px 0;border-bottom:1px solid var(--line)}.line:last-child{border-bottom:0}.qty{display:flex;align-items:center;gap:7px}.qty button{padding:5px 10px}.note{font-size:12px;padding:8px;border:1px solid var(--line);border-radius:9px;width:100%;margin-top:8px}.total{font-size:24px;font-weight:900}.bar{position:sticky;bottom:0;background:#ffffffed;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px max(14px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom));z-index:4}.barinner{max-width:1050px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between}.notice{padding:11px 13px;border-radius:12px;background:#eef5ef;font-size:13px;margin:10px 0}.notice.warn{background:#fff3df;color:#75440a}.notice.err{background:#ffefed;color:#922f2a}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.event{padding:10px 0;border-bottom:1px solid var(--line)}.event:last-child{border-bottom:0}.small{font-size:12px}.empty{padding:24px 10px;text-align:center;color:var(--muted)}@media(min-width:680px){.tables{grid-template-columns:repeat(4,minmax(0,1fr))}.products{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wrap{padding:22px}}@media(max-width:380px){.wrap{padding:10px}.panel{padding:12px}.stats{grid-template-columns:1fr 1fr}.products{grid-template-columns:1fr}.brand{font-size:18px}}
+name: Build Gusto Comandiere APK
+
+on:
+workflow_dispatch:
+push:
+branches:
+- main
+- principale
+
+permissions:
+contents: read
+
+jobs:
+build:
+name: Compila APK Gusto Comandiere
+runs-on: ubuntu-latest
+
+steps:
+  - name: Scarica repository
+    uses: actions/checkout@v4
+
+  - name: Configura Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
+
+  - name: Verifica file necessari
+    run: |
+      set -e
+
+      test -f GustoComandiereAndroid.zip
+      test -f gusto-comandiere-nuovo.html
+
+      echo "Archivio Android:"
+      ls -lh GustoComandiereAndroid.zip
+
+      echo "HTML da inserire:"
+      ls -lh gusto-comandiere-nuovo.html
+
+      echo "SHA256 HTML sorgente:"
+      sha256sum gusto-comandiere-nuovo.html
+
+  - name: Estrai e individua progetto Android
+    run: |
+      set -e
+
+      mkdir -p android-progetto
+      unzip -q GustoComandiereAndroid.zip -d android-progetto
+
+      GRADLE_DIR="android-progetto/GustoComandiereAndroid"
+
+      test -f "$GRADLE_DIR/settings.gradle"
+      test -f "$GRADLE_DIR/build.gradle"
+      test -f "$GRADLE_DIR/app/build.gradle"
+
+      echo "GRADLE_DIR=$GRADLE_DIR" >> "$GITHUB_ENV"
+
+      echo "Progetto Android selezionato:"
+      echo "$GRADLE_DIR"
+
+      echo "Progetti Gradle presenti nell'archivio:"
+      find android-progetto -name settings.gradle -print
+
+  - name: Verifica MainActivity e stampa
+    run: |
+      set -e
+
+      JAVA_FILE="$GRADLE_DIR/app/src/main/java/it/gusto/comandiere/MainActivity.java"
+
+      if [ ! -f "$JAVA_FILE" ]; then
+        echo "ERRORE: MainActivity.java non trovato"
+        exit 1
+      fi
+
+      if ! grep -q "GustoCleanter" "$JAVA_FILE"; then
+        echo "ERRORE: collegamento GustoCleanter non trovato"
+        exit 1
+      fi
+
+      if ! grep -q 'file:///android_asset/index.html' "$JAVA_FILE"; then
+        echo "ERRORE: caricamento index.html non trovato"
+        exit 1
+      fi
+
+      echo "MainActivity e collegamento stampa verificati."
+
+  - name: Sostituisci HTML nell'app Android
+    run: |
+      set -e
+
+      DEST="$GRADLE_DIR/app/src/main/assets/index.html"
+
+      if [ ! -f "$DEST" ]; then
+        echo "ERRORE: assets/index.html non trovato"
+        exit 1
+      fi
+
+      cp gusto-comandiere-nuovo.html "$DEST"
+
+      if ! cmp -s gusto-comandiere-nuovo.html "$DEST"; then
+        echo "ERRORE: HTML copiato non corrispondente"
+        exit 1
+      fi
+
+      echo "HTML inserito correttamente."
+      wc -c "$DEST"
+      sha256sum "$DEST"
+
+  - name: Configura Android SDK
+    run: |
+      set -e
+
+      SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+
+      SDKMANAGER=$(find "$SDK_ROOT/cmdline-tools" \
+        -type f -name sdkmanager 2>/dev/null | sort -V | tail -n 1)
+
+      if [ -z "$SDKMANAGER" ]; then
+        echo "ERRORE: sdkmanager non trovato in $SDK_ROOT"
+        exit 1
+      fi
+
+      echo "SDK: $SDK_ROOT"
+      echo "SDK Manager: $SDKMANAGER"
+
+      echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+      echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+
+      yes | "$SDKMANAGER" \
+        --sdk_root="$SDK_ROOT" \
+        --licenses || true
+
+      "$SDKMANAGER" \
+        --sdk_root="$SDK_ROOT" \
+        --install \
+        "platforms;android-35" \
+        "build-tools;35.0.0" \
+        "platform-tools"
+
+  - name: Configura Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.9'
+
+  - name: Pulisci compilazioni precedenti
+    working-directory: ${{ env.GRADLE_DIR }}
+    run: |
+      gradle clean --no-daemon
+
+  - name: Compila APK
+    working-directory: ${{ env.GRADLE_DIR }}
+    run: |
+      gradle assembleDebug --no-daemon
+
+  - name: Verifica APK e HTML incorporato
+    run: |
+      set -e
+
+      APK="$GRADLE_DIR/app/build/outputs/apk/debug/app-debug.apk"
+
+      if [ ! -f "$APK" ]; then
+        echo "ERRORE: APK non generata"
+        exit 1
+      fi
+
+      echo "APK generata:"
+      ls -lh "$APK"
+
+      echo "Controllo HTML incorporato nell'APK..."
+
+      unzip -p "$APK" assets/index.html > /tmp/index-apk.html
+
+      if ! cmp -s gusto-comandiere-nuovo.html /tmp/index-apk.html; then
+        echo "ERRORE: L'HTML nell'APK non corrisponde al file sorgente"
+        exit 1
+      fi
+
+      echo "VERIFICATO: HTML dell'APK identico al file sorgente."
+
+      echo "SHA256 HTML APK:"
+      sha256sum /tmp/index-apk.html
+
+      echo "SHA256 APK:"
+      sha256sum "$APK"
+
+  - name: Pubblica APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: Gusto-Comandiere-APK
+      path: android-progetto/GustoComandiereAndroid/app/build/outputs/apk/debug/app-debug.apk
+      if-no-files-found: errornd:#ffe1df;border-color:#c51f1a;color:#9f1712;box-shadow:0 0 0 0 #c51f1a35}50%{background:#c51f1a;border-color:#ffb3ae;color:#fff;box-shadow:0 0 0 6px #c51f1a45}}.pill{display:inline-flex;border-radius:99px;padding:4px 9px;background:#edf2ee;font-size:11px;font-weight:800;align-self:flex-start}.pill.green{background:#e0f2e4;color:#1e6035}.pill.orange{background:#fff0d9;color:#92530b}.pill.red{background:#ffe8e5;color:#9b2e29}.count{display:flex;align-items:center;gap:14px}.count button{width:44px;height:44px;font-size:22px;padding:0}.count strong{font-size:24px;min-width:32px;text-align:center}.categories{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}.order-section-title{font-size:15px;font-weight:900;letter-spacing:.2px;padding:10px 12px;margin:12px 0 4px;background:#e8efe9;border-left:4px solid var(--green);border-radius:8px}.order-section-title.drinks{background:#eaf2ff;border-left-color:#3869a8}.course-tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.picker-course{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.picker-course button{flex:1;min-width:125px;border:1px solid var(--line);background:#f7faf7;text-align:left}.picker-course button.active{background:var(--green);color:#fff;border-color:var(--green)}.picker-intro{font-weight:850;margin:4px 0 8px}.step-number{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#e6f2e9;color:#17452f;margin-right:7px}.course-tools button{padding:9px 11px;font-size:13px}.cat{white-space:nowrap;border:1px solid var(--line);background:white}.cat.active{background:var(--green);color:white}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{border:1px solid var(--line);border-radius:14px;padding:11px;background:white;display:flex;flex-direction:column;gap:6px;min-width:0}.product .name{font-weight:800;line-height:1.25}.product .desc{font-size:12px;color:var(--muted);flex:1}.product .bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}.product .bottom button{padding:9px 12px}.line{padding:12px 0;border-bottom:1px solid var(--line)}.line:last-child{border-bottom:0}.qty{display:flex;align-items:center;gap:7px}.qty button{padding:5px 10px}.note{font-size:12px;padding:8px;border:1px solid var(--line);border-radius:9px;width:100%;margin-top:8px}.total{font-size:24px;font-weight:900}.bar{position:sticky;bottom:0;background:#ffffffed;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px max(14px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom));z-index:4}.barinner{max-width:1050px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between}.notice{padding:11px 13px;border-radius:12px;background:#eef5ef;font-size:13px;margin:10px 0}.notice.warn{background:#fff3df;color:#75440a}.notice.err{background:#ffefed;color:#922f2a}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.event{padding:10px 0;border-bottom:1px solid var(--line)}.event:last-child{border-bottom:0}.small{font-size:12px}.empty{padding:24px 10px;text-align:center;color:var(--muted)}@media(min-width:680px){.tables{grid-template-columns:repeat(4,minmax(0,1fr))}.products{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wrap{padding:22px}}@media(max-width:380px){.wrap{padding:10px}.panel{padding:12px}.stats{grid-template-columns:1fr 1fr}.products{grid-template-columns:1fr}.brand{font-size:18px}}
 
 
 /* Schede tavoli compatte: i dettagli si aprono solo su richiesta */
