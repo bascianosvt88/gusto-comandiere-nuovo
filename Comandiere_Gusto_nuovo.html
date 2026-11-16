@@ -728,7 +728,7 @@ main.wrap { height:auto!important; min-height:0!important; max-height:none!impor
 <div class="panel" id="stagesPanel"><h2>Uscite e storico servizio</h2><p class="muted">Le uscite possono essere organizzate separatamente. La registrazione condivisa delle conferme richiede le autorizzazioni database dedicate.</p><div id="stages"></div><button onclick="addStage()">+ Aggiungi uscita</button></div>
 </section></section>
 </main><div id="gustoHistoryDetailOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="gustoHistoryDetailTitle" onclick="if(event.target===this)gustoCloseHistoryDetail()"><div class="context-card" style="width:min(100%,560px);max-height:85vh;overflow:auto"><div class="hrow"><h2 id="gustoHistoryDetailTitle" style="margin:0">Dettaglio comanda</h2><button onclick="gustoCloseHistoryDetail()">✕ Chiudi</button></div><div id="gustoHistoryDetailContent"></div></div></div><div id="sentOrderOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="sentOrderTitle" onclick="if(event.target===this)closeSentOrder()"><div class="sent-order-card"><div class="hrow"><div><h2 id="sentOrderTitle" style="margin:0">Comanda inviata</h2><p id="sentOrderSub" class="muted" style="margin:4px 0 0">Riepilogo delle portate inviate</p></div><button onclick="closeSentOrder()" aria-label="Chiudi">✕ Chiudi</button></div><div id="sentOrderContent"><div class="empty">Caricamento comanda…</div></div><div class="hrow" style="margin-top:14px"><button onclick="closeSentOrder()">Torna ai tavoli</button><button class="primary" id="sentOrderAddBtn" onclick="addFromSentOrder()">＋ Aggiungi prodotti</button></div></div></div><div id="tableCoversStartOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tableCoversStartTitle"><div class="context-card" style="width:min(100%,360px);text-align:center"><h2 id="tableCoversStartTitle" style="margin:0 0 6px">👥 Numero coperti</h2><p id="tableCoversStartLabel" class="muted" style="margin:0 0 14px">Seleziona il numero di persone al tavolo</p><div class="count" style="justify-content:center;margin:18px 0 20px"><button type="button" onclick="changeStartTableCovers(-1)">−</button><strong id="tableCoversStartValue">2</strong><button type="button" onclick="changeStartTableCovers(1)">+</button></div><button type="button" class="primary" style="width:100%;text-align:center" onclick="confirmStartTableCovers()">OK · Apri comanda</button><button type="button" style="width:100%;text-align:center" onclick="cancelStartTableCovers()">Annulla</button></div></div><div id="tableActionOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tableActionTitle" onclick="if(event.target===this)closeTableActions()"><div class="context-card"><div class="hrow"><h2 id="tableActionTitle" style="margin:0">Azioni tavolo</h2><button onclick="closeTableActions()" aria-label="Chiudi">✕</button></div><p id="tableActionHint" class="muted">Tieni premuto per tre secondi per aprire queste azioni.</p><button class="gold" id="modifyTableOrderAction" onclick="editTableComandaFromAction()">✏️ MODIFICA COMANDA</button><button class="primary" id="addToOrderAction" onclick="addProductToExistingOrder()">＋ Aggiungi prodotto in comanda</button><button id="reserveTableAction" onclick="openReservationModal()">📅 Prenota tavolo</button><button id="mergeTablesAction" onclick="openMergeTables()">🔗 Unisci tavoli</button><button class="danger" id="freeTableAction" onclick="freeSelectedTable()">Libera tavolo</button><button class="danger" id="cancelServiceAction" onclick="cancelTableService()">🗑️ Annulla servizio e comande</button><button onclick="closeTableActions()">Chiudi</button></div></div><div id="reservationExpiredOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reservationExpiredTitle"><div class="context-card"><h2 id="reservationExpiredTitle" style="margin-top:0">⏰ Prenotazione scaduta</h2><p id="reservationExpiredText">Sono trascorsi 15 minuti dall’orario previsto e il cliente non risulta ancora arrivato.</p><button class="danger" onclick="resolveExpiredReservation('cancel')">Cancellare la prenotazione</button><button class="gold" onclick="resolveExpiredReservation('keep')">Mantenere la prenotazione</button><button class="primary" onclick="resolveExpiredReservation('open')">Aprire comanda</button></div></div><div id="reservationOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reservationTitle" onclick="if(event.target===this)closeReservationModal()"><div class="context-card"><div class="hrow"><h2 id="reservationTitle" style="margin:0">Prenota tavolo</h2><button onclick="closeReservationModal()" aria-label="Chiudi">✕</button></div><p id="reservationTableLabel" class="muted"></p><label for="reservationName">Nome prenotazione</label><input id="reservationName" type="text" maxlength="100" placeholder="Nome e cognome" style="width:100%;margin:6px 0 12px"><label for="reservationPeople">Numero di persone</label><input id="reservationPeople" type="number" min="1" max="60" value="2" style="width:100%;margin:6px 0 12px"><label for="reservationTime">Giorno e orario della prenotazione</label><input id="reservationTime" type="datetime-local" style="width:100%;margin:6px 0 12px"><label for="reservationNotes">Note / dettagli</label><textarea id="reservationNotes" rows="3" maxlength="1000" placeholder="Es. seggiolone, compleanno, esigenze particolari…" style="width:100%;margin:6px 0 12px;padding:12px;border:1px solid var(--line);border-radius:11px"></textarea><button onclick="toggleReservationExtraTables()">＋ Aggiungi altri tavoli</button><div id="reservationExtraTables" class="hidden" style="margin:10px 0;padding:8px;border:1px solid var(--line);border-radius:12px"><strong>Seleziona i tavoli da unire a questa prenotazione</strong><p class="muted">La prenotazione sarà associata a tutti i tavoli selezionati. La procedura normale della comanda non cambia.</p><div id="reservationExtraChoices" class="reservation-choice-grid"></div></div><button class="primary" onclick="saveTableReservation()">Salva prenotazione</button><button id="removeReservationBtn" class="danger" onclick="removeTableReservation()">Annulla prenotazione</button><button onclick="closeReservationModal()">Chiudi</button></div></div><div id="mergeTablesOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="mergeTablesTitle" onclick="if(event.target===this)closeMergeTables()"><div class="context-card"><div class="hrow"><h2 id="mergeTablesTitle" style="margin:0">Unisci tavoli</h2><button onclick="closeMergeTables()" aria-label="Chiudi">✕</button></div><p class="muted">Seleziona i tavoli dai pulsanti. I tavoli prenotati o occupati sono disabilitati. Dopo la conferma, tocca il tavolo unito per aprire la comanda.</p><div id="mergeTableChoices"></div><button class="primary" onclick="confirmMergeTables()">Conferma unione</button><button onclick="closeMergeTables()">Annulla</button></div></div>
-<div id="paymentChoiceOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-label="Metodo di pagamento"><div class="context-card" style="width:min(100%,360px)"><div class="hrow"><h2 style="margin:0">Pagamento</h2><button onclick="cancelPaymentChoice()" aria-label="Chiudi">✕</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px"><button aria-label="Contanti" title="Contanti" style="font-size:34px;padding:22px 8px" onclick="confirmPaymentChoice('contanti')">💵</button><button aria-label="Pagamento elettronico" title="Pagamento elettronico" style="font-size:34px;padding:22px 8px" onclick="confirmPaymentChoice('elettronico')">💳</button></div></div></div><div id="fidelityChoiceOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="fidelityChoiceTitle" onclick="if(event.target===this)closeFidelityChoice()"><div class="context-card" style="width:min(100%,440px)"><div class="hrow"><h2 id="fidelityChoiceTitle" style="margin:0">▦ Fidelity</h2><button onclick="closeFidelityChoice()" aria-label="Chiudi">✕</button></div><p class="muted">Scegli cosa fare per questo tavolo.</p><button class="primary" style="width:100%;margin:6px 0" onclick="chooseFidelityMode('voucher')">🎟️ Riscatta buono</button><button class="gold" style="width:100%;margin:6px 0" onclick="chooseFidelityMode('points')">▦ Inquadra QR code</button><button style="width:100%;margin-top:8px" onclick="closeFidelityChoice()">Annulla</button></div></div><input id="fidelityCameraCaptureInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFidelityCapturedImage(event)"><div id="fidelityScannerOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="fidelityScannerTitle" onclick="if(event.target===this)closeFidelityScanner()"><div class="context-card" style="width:min(100%,520px)"><div class="hrow"><h2 id="fidelityScannerTitle" style="margin:0">▦ Fidelity</h2><button onclick="closeFidelityScanner()" aria-label="Chiudi">✕</button></div><p id="fidelityScannerSubtitle" class="muted">Inquadra il QR personale oppure inserisci il codice del cliente registrato nell’app Gusto.</p><div id="fidelityCameraWrap" class="hidden" style="margin:12px 0;background:#111;border-radius:14px;overflow:hidden"><video id="fidelityCameraVideo" autoplay playsinline muted style="display:block;width:100%;max-height:42vh;object-fit:contain"></video></div><div id="fidelityScannerStatus" class="notice">Avvio della fotocamera…</div><div class="field"><label for="fidelityVoucherCode">Codice</label><input id="fidelityVoucherCode" autocomplete="off" autocapitalize="characters" placeholder="QR cliente o codice buono"></div><button id="fidelityScanStartBtn" class="primary" style="width:100%" onclick="startFidelityCamera()">▦ Inquadra QR</button><button id="fidelityVoucherConfirmBtn" class="gold" style="width:100%" onclick="confirmFidelityAction()">Conferma codice</button><div id="fidelityVoucherResult" class="notice hidden"></div><button onclick="closeFidelityScanner()">Chiudi senza associare il cliente</button></div></div>
+<div id="paymentChoiceOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-label="Metodo di pagamento"><div class="context-card" style="width:min(100%,420px)"><div class="hrow"><h2 style="margin:0">Pagamento</h2><button onclick="cancelPaymentChoice()" aria-label="Chiudi">✕</button></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px"><button aria-label="Contanti" title="Contanti" style="font-size:20px;padding:18px 6px" onclick="confirmPaymentChoice('contanti')">💵<br>CONTANTI</button><button aria-label="Pagamento POS" title="POS" style="font-size:20px;padding:18px 6px" onclick="confirmPaymentChoice('elettronico')">💳<br>POS</button><button id="paymentChoiceSplitContinue" aria-label="Continua pagamento già diviso" title="Pagamento già effettuato con Ognuno il suo o Alla romana" style="display:none;font-size:17px;padding:18px 6px;background:#b78b35;color:#17251b;border:0;border-radius:10px;font-weight:900" onclick="confirmPaymentChoice('diviso')">✓<br>CONTINUA</button></div></div></div><div id="fidelityChoiceOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="fidelityChoiceTitle" onclick="if(event.target===this)closeFidelityChoice()"><div class="context-card" style="width:min(100%,440px)"><div class="hrow"><h2 id="fidelityChoiceTitle" style="margin:0">▦ Fidelity</h2><button onclick="closeFidelityChoice()" aria-label="Chiudi">✕</button></div><p class="muted">Scegli cosa fare per questo tavolo.</p><button class="primary" style="width:100%;margin:6px 0" onclick="chooseFidelityMode('voucher')">🎟️ Riscatta buono</button><button class="gold" style="width:100%;margin:6px 0" onclick="chooseFidelityMode('points')">▦ Inquadra QR code</button><button style="width:100%;margin-top:8px" onclick="closeFidelityChoice()">Annulla</button></div></div><input id="fidelityCameraCaptureInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFidelityCapturedImage(event)"><div id="fidelityScannerOverlay" class="context-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="fidelityScannerTitle" onclick="if(event.target===this)closeFidelityScanner()"><div class="context-card" style="width:min(100%,520px)"><div class="hrow"><h2 id="fidelityScannerTitle" style="margin:0">▦ Fidelity</h2><button onclick="closeFidelityScanner()" aria-label="Chiudi">✕</button></div><p id="fidelityScannerSubtitle" class="muted">Inquadra il QR personale oppure inserisci il codice del cliente registrato nell’app Gusto.</p><div id="fidelityCameraWrap" class="hidden" style="margin:12px 0;background:#111;border-radius:14px;overflow:hidden"><video id="fidelityCameraVideo" autoplay playsinline muted style="display:block;width:100%;max-height:42vh;object-fit:contain"></video></div><div id="fidelityScannerStatus" class="notice">Avvio della fotocamera…</div><div class="field"><label for="fidelityVoucherCode">Codice</label><input id="fidelityVoucherCode" autocomplete="off" autocapitalize="characters" placeholder="QR cliente o codice buono"></div><button id="fidelityScanStartBtn" class="primary" style="width:100%" onclick="startFidelityCamera()">▦ Inquadra QR</button><button id="fidelityVoucherConfirmBtn" class="gold" style="width:100%" onclick="confirmFidelityAction()">Conferma codice</button><div id="fidelityVoucherResult" class="notice hidden"></div><button onclick="closeFidelityScanner()">Chiudi senza associare il cliente</button></div></div>
 <div id="bottomBar" class="bar hidden"><div class="barinner"><div><div class="muted" id="barLabel">Comanda</div><strong>Prodotti selezionati</strong></div><button class="primary" id="bottomSendBtn" type="button" onclick="sendOrder()">Manda comanda in cucina ↑</button></div></div>
 <div id="quickCashModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quickCashTitle" style="position:fixed;inset:0;z-index:9999;background:#0009;display:flex;align-items:center;justify-content:center;padding:16px">
  <section id="quickCashCard" class="panel" style="background:var(--white);box-shadow:0 15px 50px #0004">
@@ -850,7 +850,7 @@ const seedProducts=[
 {id:88,name:"Sorbetto al LIMONE",category:"Dolci",price:3,desc:"",image:"",available:true}
 ];;
 const CLEAN_START='2026-10-14T14:20:00Z'; // Avvio azzerato: ignora le comande di prova precedenti.
-let paymentChoiceForTable=null,paymentChoiceSelected=null;
+let paymentChoiceForTable=null,paymentChoiceSelected=null,paymentChoiceSplitAllowed=false;
 let previousReadySignature='';
 // Abilita il via alla portata successiva solo dopo che il cameriere ha confermato il ritiro/visione dei prodotti pronti.
 const courseReleaseReadyByTable={};
@@ -1166,7 +1166,7 @@ async function gustoOpenTableBillEditor(tableNo){
   const baseTotal=matches.reduce((sum,o)=>sum+(Number(o.totale)||0),0);
   gustoTableBillEditState={tableNo,rows:matches,lines,baseTotal};
   const overlay=document.createElement('div');overlay.id='gusto-table-bill-editor';overlay.style.cssText='position:fixed;inset:0;z-index:100001;background:#0009;display:flex;align-items:center;justify-content:center;padding:12px';
-  overlay.innerHTML=`<div role="dialog" aria-modal="true" style="width:min(680px,100%);max-height:96dvh;overflow:auto;background:#fff;color:#18221b;border-radius:14px;padding:10px 12px;box-shadow:0 15px 45px #0005"><h2 style="margin:0 0 3px;font-size:19px">Controllo conto · ${gustoOnlineEsc(t.label)}</h2><p style="font-size:11px;line-height:1.25;color:#5b685f;margin:0 0 6px">Modifica prezzi, omaggi o esclusioni. Le comande inviate in cucina non cambiano.</p><div id="gusto-table-bill-lines"></div><div style="padding:7px 0;border-top:2px solid #dce4dd;display:flex;justify-content:space-between;font-size:17px;font-weight:900"><span>NUOVO TOTALE</span><span id="gusto-table-bill-total"></span></div><div style="display:flex;gap:6px;flex-wrap:nowrap"><button type="button" style="flex:1;min-width:0;padding:9px 5px;background:#17452f;color:#fff;border:0;font-size:12px" onclick="gustoPrintTableBillEditor()">Stampa preconto</button><button class="primary" style="flex:1;min-width:0;padding:9px 5px;font-size:12px" onclick="gustoSaveTableBillEditor()">Salva e continua</button><button type="button" style="flex:0.7;min-width:0;padding:9px 5px;font-size:12px" onclick="gustoCloseTableBillEditor()">Annulla</button></div></div>`;
+  overlay.innerHTML=`<div role="dialog" aria-modal="true" style="width:min(680px,100%);max-height:96dvh;overflow:auto;background:#fff;color:#18221b;border-radius:14px;padding:10px 12px;box-shadow:0 15px 45px #0005"><h2 style="margin:0 0 3px;font-size:19px">Controllo conto · ${gustoOnlineEsc(t.label)}</h2><p style="font-size:11px;line-height:1.25;color:#5b685f;margin:0 0 6px">Modifica prezzi, omaggi o esclusioni. Le comande inviate in cucina non cambiano.</p><div id="gusto-table-bill-lines"></div><div style="padding:7px 0;border-top:2px solid #dce4dd;display:flex;justify-content:space-between;font-size:17px;font-weight:900"><span>NUOVO TOTALE</span><span id="gusto-table-bill-total"></span></div><div style="display:flex;gap:6px;flex-wrap:nowrap"><button type="button" style="flex:1;min-width:0;padding:9px 5px;background:#b78b35;color:#17251b;border:0;font-size:12px;font-weight:900" onclick="gustoCloseBillEditorForSplit();gustoOpenSplitPaymentForTable(${Number(tableNo)})">👥 Ognuno il suo</button><button type="button" style="flex:1;min-width:0;padding:9px 5px;background:#17452f;color:#fff;border:0;font-size:12px;font-weight:900" onclick="gustoCloseBillEditorForSplit();gustoOpenRomanPaymentForTable(${Number(tableNo)})">➗ Alla romana</button><button type="button" style="flex:1;min-width:0;padding:9px 5px;background:#17452f;color:#fff;border:0;font-size:12px" onclick="gustoPrintTableBillEditor()">Stampa preconto</button><button class="primary" style="flex:1;min-width:0;padding:9px 5px;font-size:12px" onclick="gustoSaveTableBillEditor()">Salva e continua</button><button type="button" style="flex:0.7;min-width:0;padding:9px 5px;font-size:12px" onclick="gustoCloseTableBillEditor()">Annulla</button></div></div>`;
   document.body.appendChild(overlay);gustoRenderTableBillEditor();
  }catch(e){alert('Non riesco ad aprire il controllo del conto: '+(e.message||'errore Supabase'));}
 }
@@ -1189,26 +1189,26 @@ function gustoTableBillAmount(l){const qty=Math.max(1,Number(l.qty)||1),gift=Mat
 function gustoRenderTableBillEditor(){const st=gustoTableBillEditState;if(!st)return;const box=document.getElementById('gusto-table-bill-lines');if(!box)return;box.innerHTML=st.lines.map((l,i)=>{l.giftQty=Math.min(Math.max(0,Number(l.giftQty)||0),Math.max(1,Number(l.qty)||1));const giftLabel=`Omaggio ${l.giftQty}/${l.qty}`;return `<div style="padding:5px 0;border-bottom:1px solid #dce4dd;display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,220px);gap:7px;align-items:center"><div style="min-width:0"><strong style="font-size:14px;line-height:1.15">${l.qty}× ${gustoOnlineEsc(l.name)}</strong><div style="font-size:10px;color:#68756c;line-height:1.15">Prezzo unitario ${gustoOnlineEuro(l.price)} · Da pagare ${l.qty-l.giftQty} pz · Riga ${gustoOnlineEuro(gustoTableBillAmount(l))}</div></div><div style="display:flex;flex-direction:column;gap:3px;align-items:stretch"><label style="font-size:10px;font-weight:800" for="gusto-bill-price-${i}">Prezzo €</label><div style="display:flex;gap:5px;align-items:center"><input id="gusto-bill-price-${i}" type="number" min="0" step="0.01" value="${Number(l.price).toFixed(2)}" oninput="gustoTableBillSetPrice(${i},this.value)" style="min-width:0;flex:1;width:1px;padding:6px 5px;border:1px solid #cbd7ce;border-radius:7px;font-size:14px"><button type="button" onclick="gustoTableBillCycleGift(${i})" style="flex:0 0 auto;white-space:nowrap;padding:7px 8px;border:0;border-radius:7px;background:#eaf1ec;color:#183c2b;font-size:10px;font-weight:800">${giftLabel}</button></div></div></div>`}).join('');const total=st.baseTotal+st.lines.reduce((sum,l)=>sum+(gustoTableBillAmount(l)-(l.originalPrice*l.qty)),0);document.getElementById('gusto-table-bill-total').textContent=gustoOnlineEuro(Math.max(0,total));}
 function gustoTableBillSetPrice(i,v){const st=gustoTableBillEditState;if(!st||!st.lines[i])return;const n=Number(v);st.lines[i].price=Number.isFinite(n)?Math.max(0,n):0;const total=st.baseTotal+st.lines.reduce((sum,l)=>sum+(gustoTableBillAmount(l)-(l.originalPrice*l.qty)),0);document.getElementById('gusto-table-bill-total').textContent=gustoOnlineEuro(Math.max(0,total));}
 function gustoTableBillCycleGift(i){const st=gustoTableBillEditState,l=st?.lines?.[i];if(!l)return;const qty=Math.max(1,Number(l.qty)||1);l.giftQty=((Math.max(0,Number(l.giftQty)||0)+1)%(qty+1));gustoRenderTableBillEditor();}
-async function gustoSaveTableBillEditor(){const st=gustoTableBillEditState;if(!st)return;const total=Math.max(0,st.baseTotal+st.lines.reduce((sum,l)=>sum+(gustoTableBillAmount(l)-(l.originalPrice*l.qty)),0));const canonical=[...st.rows].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')))[0];if(!canonical)return;try{let d=canonical.dettagli;try{if(typeof d==='string')d=JSON.parse(d||'{}')}catch{d={}}d={...(d||{}),gustoConto:{tipo:'rettifica_conto',soloConto:true,totaleOriginale:st.baseTotal,totaleModificato:total,consegnaConto:st.isDelivery?Math.max(0,Number(st.deliveryFee)||0):0,righe:st.lines.map(l=>({ordineId:l.orderId,indiceProdotto:l.index,nome:l.name,quantita:l.qty,prezzoOriginale:l.originalPrice,prezzoConto:l.price,quantitaOmaggio:Math.min(Math.max(0,Number(l.giftQty)||0),Math.max(1,Number(l.qty)||1)),esclusoDalConto:false,importoConto:gustoTableBillAmount(l)})),aggiornatoIl:new Date().toISOString(),aggiornatoDa:user?.id||null,operatore:staffName||user?.email||'Operatore'}};const {data,error}=await sb.from('ordini').update({dettagli:d}).eq('id',canonical.id).select('id').maybeSingle();if(error)throw error;if(!data)throw new Error('Supabase non ha confermato il salvataggio.');const t=tables.find(x=>Number(x.number)===Number(st.tableNo));if(t){t.billReviewed=true;t.billTotal=total;saveTables();}const no=st.tableNo;const table=tables.find(x=>Number(x.number)===Number(no));if(table)table.billReviewed=true;gustoCloseTableBillEditor();contextTableNumber=no;paymentChoiceForTable=no;paymentChoiceSelected=null;$('paymentChoiceOverlay').classList.remove('hidden');}catch(e){alert('Non sono riuscito a salvare la rettifica del conto: '+(e.message||'errore Supabase'));}}
+async function gustoSaveTableBillEditor(){const st=gustoTableBillEditState;if(!st)return;const total=Math.max(0,st.baseTotal+st.lines.reduce((sum,l)=>sum+(gustoTableBillAmount(l)-(l.originalPrice*l.qty)),0));const canonical=[...st.rows].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')))[0];if(!canonical)return;try{let d=canonical.dettagli;try{if(typeof d==='string')d=JSON.parse(d||'{}')}catch{d={}}d={...(d||{}),gustoConto:{tipo:'rettifica_conto',soloConto:true,totaleOriginale:st.baseTotal,totaleModificato:total,consegnaConto:st.isDelivery?Math.max(0,Number(st.deliveryFee)||0):0,righe:st.lines.map(l=>({ordineId:l.orderId,indiceProdotto:l.index,nome:l.name,quantita:l.qty,prezzoOriginale:l.originalPrice,prezzoConto:l.price,quantitaOmaggio:Math.min(Math.max(0,Number(l.giftQty)||0),Math.max(1,Number(l.qty)||1)),esclusoDalConto:false,importoConto:gustoTableBillAmount(l)})),aggiornatoIl:new Date().toISOString(),aggiornatoDa:user?.id||null,operatore:staffName||user?.email||'Operatore'}};const {data,error}=await sb.from('ordini').update({dettagli:d}).eq('id',canonical.id).select('id').maybeSingle();if(error)throw error;if(!data)throw new Error('Supabase non ha confermato il salvataggio.');const t=tables.find(x=>Number(x.number)===Number(st.tableNo));if(t){t.billReviewed=true;t.billTotal=total;saveTables();}const no=st.tableNo;const table=tables.find(x=>Number(x.number)===Number(no));if(table)table.billReviewed=true;gustoCloseTableBillEditor();contextTableNumber=no;paymentChoiceForTable=no;paymentChoiceSelected=null;const splitLedger=Array.isArray(d?.gustoPagamentiDivisi?.pagamenti)?d.gustoPagamentiDivisi.pagamenti:[];const splitPaid=splitLedger.reduce((sum,p)=>sum+(Number(p.importo)||0),0);paymentChoiceSplitAllowed=splitLedger.length>0&&splitPaid>=total-0.01;const splitBtn=$('paymentChoiceSplitContinue');if(splitBtn)splitBtn.style.display=paymentChoiceSplitAllowed?'block':'none';$('paymentChoiceOverlay').classList.remove('hidden');}catch(e){alert('Non sono riuscito a salvare la rettifica del conto: '+(e.message||'errore Supabase'));}}
 
-function cancelPaymentChoice(){ $('paymentChoiceOverlay').classList.add('hidden'); if(paymentChoiceForTable!==null){const t=tables.find(x=>Number(x.number)===Number(paymentChoiceForTable));if(t)t.billReviewed=false;} paymentChoiceForTable=null; paymentChoiceSelected=null; }
-function confirmPaymentChoice(method){ paymentChoiceSelected=method; $('paymentChoiceOverlay').classList.add('hidden'); contextTableNumber=paymentChoiceForTable; paymentChoiceForTable=null; freeSelectedTable(); }
+function cancelPaymentChoice(){ $('paymentChoiceOverlay').classList.add('hidden'); if(paymentChoiceForTable!==null){const t=tables.find(x=>Number(x.number)===Number(paymentChoiceForTable));if(t)t.billReviewed=false;} paymentChoiceForTable=null; paymentChoiceSelected=null; paymentChoiceSplitAllowed=false; }
+function confirmPaymentChoice(method){ if(method==='diviso'&&!paymentChoiceSplitAllowed)return alert('Il conto non risulta interamente saldato con Ognuno il suo o Alla romana.'); paymentChoiceSelected=method; $('paymentChoiceOverlay').classList.add('hidden'); contextTableNumber=paymentChoiceForTable; paymentChoiceForTable=null; paymentChoiceSplitAllowed=false; freeSelectedTable(); }
 async function freeSelectedTable(){const n=contextTableNumber;const t=tables.find(x=>x.number===n);if(!t||!tableBusy(t)){closeTableActions();return}if(!t.hasSent&&!Number(t.orderNumber||0)){if(!confirm(`Chiudere il servizio vuoto di ${t.label}? Non ci sono comande inviate.`))return;clearTableLocalState(t);saveTables();closeTableActions();renderTables();return}const ready=readyDishesByTable[String(n)]||[];const closeSummary=serviceSummaryByTable[String(n)]||null;const closeDrinks=drinkOrdersByTable[String(n)]||[];if(!t.hasSent||!areAllCoursesOut(t,closeSummary)||ready.length||closeDrinks.some(x=>!x.delivered)){alert('Non puoi liberare il tavolo finché tutte le portate, le bevande, i dolci e la caffetteria non risultano consegnati.');return}if(!paymentChoiceSelected){gustoOpenTableBillEditor(n);return}const chosenPayment=paymentChoiceSelected;paymentChoiceSelected=null;const oldSession=t.sessionId;const releaseGroup=[...(t.groupNumbers||[])];const reservationToRelease=t.reservation||releaseGroup.map(num=>tables.find(x=>Number(x.number)===Number(num))?.reservation).find(r=>r?.dbId||r?.rowId)||null;let fidelityReleaseMessage='';try{if(reservationToRelease&&(reservationToRelease.dbId||reservationToRelease.rowId)){const bookingRowId=reservationToRelease.dbId||reservationToRelease.rowId;const {data:bookingRow,error:bookingReadError}=await sb.from('ordini').select('id,dettagli').eq('id',bookingRowId).maybeSingle();if(bookingReadError)throw bookingReadError;if(bookingRow){let bookingDetails=bookingRow.dettagli;try{if(typeof bookingDetails==='string')bookingDetails=JSON.parse(bookingDetails||'{}')}catch{bookingDetails={}}bookingDetails={...(bookingDetails||{}),status:'liberato',releasedAt:new Date().toISOString(),releasedTableNumbers:releaseGroup.length>1?releaseGroup:[n],tableNumber:null,tableNumbers:[],groupNumbers:[],tableLabel:'',tableArea:'',released:true};const {data:releasedRow,error:releaseError}=await sb.from('ordini').update({stato:'Prenotazione liberata',indirizzo:'Tavolo liberato',dettagli:bookingDetails}).eq('id',bookingRowId).select('id').maybeSingle();if(releaseError)throw releaseError;if(!releasedRow)throw new Error('Supabase non ha confermato la liberazione della prenotazione.')}}if(oldSession){
 const {data:rows,error}=await sb.from('ordini').select('id,created_at,totale,dettagli').eq('tipo_ordine','Comanda al tavolo').gte('created_at',CLEAN_START).limit(200);
 if(error)throw error;
 const matches=(rows||[]).filter(o=>{const d=typeof o.dettagli==='string'?JSON.parse(o.dettagli||'{}'):(o.dettagli||{});return d.comandaSession===oldSession&&String(d.tableNumber??'')===String(n)&&!d.servizioChiuso});
 const closedAt=new Date().toISOString();
-const serviceGross=matches.reduce((sum,o)=>sum+(Number(o.totale)||0),0);const canonical=[...matches].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')))[0]||null;const canonicalDetails=canonical?(typeof canonical.dettagli==='string'?JSON.parse(canonical.dettagli||'{}'):(canonical.dettagli||{})):{};const billOverride=Number.isFinite(Number(canonicalDetails?.gustoConto?.totaleModificato))?Number(canonicalDetails.gustoConto.totaleModificato):null;const serviceVoucher=matches.map(o=>{const d=typeof o.dettagli==='string'?JSON.parse(o.dettagli||'{}'):(o.dettagli||{});return d.fidelityVoucher||null}).find(Boolean);const serviceDiscount=serviceVoucher?Math.min(serviceGross,Number(serviceVoucher.valore_euro)||0):0;const serviceTotal=billOverride!==null?Math.max(0,billOverride-serviceDiscount):Math.max(0,serviceGross-serviceDiscount);
+const serviceGross=matches.reduce((sum,o)=>sum+(Number(o.totale)||0),0);const canonical=[...matches].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')))[0]||null;const canonicalDetails=canonical?(typeof canonical.dettagli==='string'?JSON.parse(canonical.dettagli||'{}'):(canonical.dettagli||{})):{};const billOverride=Number.isFinite(Number(canonicalDetails?.gustoConto?.totaleModificato))?Number(canonicalDetails.gustoConto.totaleModificato):null;const splitLedger=Array.isArray(canonicalDetails?.gustoPagamentiDivisi?.pagamenti)?canonicalDetails.gustoPagamentiDivisi.pagamenti:[];const splitMethods=[...new Set(splitLedger.map(p=>p.metodo).filter(Boolean))];const finalPaymentMethod=chosenPayment==='diviso'?(splitMethods.join(' + ')||'Pagamento diviso'):chosenPayment;const serviceVoucher=matches.map(o=>{const d=typeof o.dettagli==='string'?JSON.parse(o.dettagli||'{}'):(o.dettagli||{});return d.fidelityVoucher||null}).find(Boolean);const serviceDiscount=serviceVoucher?Math.min(serviceGross,Number(serviceVoucher.valore_euro)||0):0;const serviceTotal=billOverride!==null?Math.max(0,billOverride-serviceDiscount):Math.max(0,serviceGross-serviceDiscount);
 for(const o of matches){
 const d=typeof o.dettagli==='string'?JSON.parse(o.dettagli||'{}'):(o.dettagli||{});
 d.servizioChiuso=true;
-d.metodoPagamento=chosenPayment;
+d.metodoPagamento=finalPaymentMethod;
 d.servizioChiusoIl=closedAt;
 d.servizioChiusoDa=user?.id||null;
 d.servizioChiusoDaNome=staffName||user?.email||'Operatore';
 // Metadati minimi condivisi con il Gestore: il riepilogo economico viene salvato su una sola riga per evitare doppi conteggi.
 d.gustoCassa={...(d.gustoCassa||{}),tipo:'chiusura_tavolo',riepilogo:!!canonical&&String(o.id)===String(canonical.id),sessionId:oldSession,tavolo:n,importoServizio:serviceTotal,chiusoIl:closedAt,chiusoDa:user?.id||null,operatore:staffName||user?.email||'Operatore',totalePieno:serviceGross,scontoFidelity:serviceDiscount,codiceBuonoFidelity:serviceVoucher?.codice||null};
-const isCanonical=!!canonical&&String(o.id)===String(canonical.id);const updatePayload={dettagli:d,totale:isCanonical?serviceTotal:0};if(isCanonical){d.gustoCassa.importoConfermato=serviceTotal;d.gustoCassa.metodoPagamento=chosenPayment;updatePayload.pagamento=chosenPayment;}const {data,error:updateError}=await sb.from('ordini').update(updatePayload).eq('id',o.id).select('id').maybeSingle();
+const isCanonical=!!canonical&&String(o.id)===String(canonical.id);const updatePayload={dettagli:d,totale:isCanonical?serviceTotal:0};if(isCanonical){d.gustoCassa.importoConfermato=serviceTotal;d.gustoCassa.metodoPagamento=finalPaymentMethod;updatePayload.pagamento=finalPaymentMethod;}const {data,error:updateError}=await sb.from('ordini').update(updatePayload).eq('id',o.id).select('id').maybeSingle();
 if(updateError)throw updateError;
 if(!data)throw new Error('Supabase non ha confermato la chiusura di una comanda.');
 }}}catch(e){console.error('Chiusura servizio non riuscita',e);alert('Non ho liberato il tavolo perché non sono riuscito a registrare la chiusura su Supabase. '+(e.message||''));return}const closedReservationId=reservationToRelease?.id||null;const closedReservationDbId=reservationToRelease?.dbId||reservationToRelease?.rowId||null;t.covers=2;t.sessionId='';t.orderNumber=0;t.items={};t.stages=[];t.hasSent=false;t.existingCover=0;t.orderCodes=[];t.lastOrderId=null;t.pendingCourseRequestId=null;t.openedAt=null;t.fidelityCustomerId=null;t.fidelityCustomerName=null;if(t.reservation&&(String(t.reservation.id||'')===String(closedReservationId||'')||String(t.reservation.dbId||t.reservation.rowId||'')===String(closedReservationDbId||'')))t.reservation=null;remoteTableReservations=remoteTableReservations.filter(r=>String(r.dbId||r.rowId||'')!==String(closedReservationDbId||'')&&String(r.id||'')!==String(closedReservationId||''));const freedLabel=t.label;const group=[...(t.groupNumbers||[])];if(group.length>1){for(const memberNo of group){const member=tables.find(x=>Number(x.number)===Number(memberNo));if(!member)continue;member.groupHiddenBy=null;member.groupNumbers=null;member.label=`${tableAreaLabel(member.number)} · ${tableDisplayName(member.number)}`;if(member!==t){member.covers=2;member.sessionId='';member.orderNumber=0;member.items={};member.stages=[];member.hasSent=false;member.existingCover=0;member.orderCodes=[];member.lastOrderId=null;member.pendingCourseRequestId=null;member.openedAt=null;}}}else{t.groupNumbers=null;}saveTables();closeTableActions();await loadRemoteTableReservations();renderTables();renderReservationTables();alert(`${freedLabel} è stato liberato. La comanda è stata chiusa nella cucina; la prenotazione collegata è stata conclusa. Lo storico resta conservato e gli altri turni prenotati rimangono invariati.`)}
@@ -2186,7 +2186,7 @@ async function gustoLoadOnlineOrders(){
    const isPartito=gustoOnlineNorm(st)==='partito';
    if(ready){const seen=gustoReadyAcked(o.id),printed=gustoReceiptPrinted(o.id);actions=`<div class="online-order-buttons">${seen?'':'<button class="primary" onclick="event.stopPropagation();gustoAckReady('+Number(o.id)+')">👁️ HO VISUALIZZATO LA COMANDA</button>'}${seen&&!printed?`<button class="primary" style="width:100%;background:#17452f;color:#fff" onclick="event.stopPropagation();gustoPrintOnlineOrder(${Number(o.id)})">🖨️ STAMPA COMANDA</button>`:''}${printed?`<button class="primary" style="width:100%;background:#17452f;color:#fff" onclick="event.stopPropagation();gustoSetOnlineStatus(${Number(o.id)},'Partito')">🛵 PARTITO</button>`:''}</div>`;}
    
-   if(isPartito)actions=`<div class="online-order-action">🛵 RIDER PARTITO · CONFERMA IL PAGAMENTO</div><div class="online-order-buttons"><button class="primary" onclick="event.stopPropagation();gustoConfirmDeliveryPayment(${Number(o.id)},'Contanti')">💵 CONTANTI</button><button class="primary" onclick="event.stopPropagation();gustoConfirmDeliveryPayment(${Number(o.id)},'POS')">💳 POS</button></div>`;
+   if(isPartito)actions=`<div class="online-order-action">🛵 RIDER PARTITO · CONFERMA IL PAGAMENTO</div><div class="online-order-buttons"><button class="primary" onclick="event.stopPropagation();gustoConfirmDeliveryPayment(${Number(o.id)},'Contanti')">💵 CONTANTI</button><button class="primary" onclick="event.stopPropagation();gustoConfirmDeliveryPayment(${Number(o.id)},'POS')">💳 POS</button><button type="button" class="primary" style="grid-column:1/-1;background:#b78b35;color:#17251b" onclick="event.stopPropagation();gustoOpenSplitPaymentForOrder(${Number(o.id)})">👥 OGNUNO IL SUO</button><button type="button" class="primary" style="grid-column:1/-1;background:#17452f;color:#fff" onclick="event.stopPropagation();gustoOpenRomanPaymentForOrder(${Number(o.id)})">➗ ALLA ROMANA</button></div>`;
    const kitchenCall=d.cucina?.chiamataCameriere,callPending=!!(kitchenCall&&!kitchenCall.visualizzataIl&&!kitchenCall.chiusaIl),callComing=!!(kitchenCall&&kitchenCall.visualizzataIl&&!kitchenCall.chiusaIl);const kitchenCallHtml=callPending?`<div style="margin:8px 0;padding:10px;text-align:center;background:#b51212;color:#fff;border:3px solid #ff7777;border-radius:10px;font-weight:1000;animation:gustoKitchenCallPulse .7s steps(2,end) infinite">🔔 LA CUCINA CHIAMA</div><button type="button" class="primary" style="width:100%;margin-bottom:8px;background:#b51212;color:#fff" onclick="event.stopPropagation();acknowledgeCustomerKitchenCall(${Number(o.id)})">🔔 PRESO IN CARICO</button>`:callComing?`<div style="margin:8px 0;padding:10px;text-align:center;background:#176b3a;color:#fff;border:2px solid #79d99a;border-radius:10px;font-weight:900">🟢 CAMERIERE AVVISATO</div><button type="button" class="primary" style="width:100%;margin-bottom:8px" onclick="event.stopPropagation();gustoFinishCustomerKitchenCall(${Number(o.id)})">✓ CHIUDI CHIAMATA</button>`:'';const deliveryReminder=gustoDeliveryReminderDue(o);const savedBillRows=Array.isArray(d.gustoConto?.righe)?d.gustoConto.righe:[];const savedBillTotal=Number.isFinite(Number(d.gustoConto?.totaleModificato))?Math.max(0,Number(d.gustoConto.totaleModificato)):null;const cardDeliveryFee=serviceClass==='service-delivery'?2:0;const displayedOrderTotal=savedBillTotal!==null?savedBillTotal:Math.max(0,Number(o.totale)||0)+cardDeliveryFee;const billItems=summary.items.map(it=>{const name=String(it.name||it.nome||it.prodotto||'Prodotto'),q=Math.max(1,Number(it.qty??it.quantita??1));const saved=savedBillRows.find(x=>String(x.nome||'').toLocaleLowerCase('it-IT')===name.toLocaleLowerCase('it-IT')&&Number(x.quantita)===q);return saved?{...it,price:Number(saved.prezzoConto)||0,prezzo:Number(saved.prezzoConto)||0,_excluded:!!saved.esclusoDalConto,_giftPieces:Array.isArray(saved.pezziOmaggio)?saved.pezziOmaggio.map(Number):[],_giftQty:Math.max(0,Number(saved.quantitaOmaggio)||0)}:it});const receiptItemsHtml=billItems.length?billItems.map(it=>{const q=Math.max(1,Number(it.qty??it.quantita??1)),price=Number(it.price??it.prezzo??0),adds=gustoReceiptAdditions(it),base=gustoReceiptBasePrice(it),addTotal=adds.reduce((a,x)=>a+x.price,0),unit=adds.length?base+addTotal:price,giftQty=Math.min(q,Math.max(Number(it._giftQty)||0,(it._giftPieces||[]).length)),chargeQty=it._excluded?0:q-giftQty;return `<div style="padding:8px 0;border-bottom:1px dashed #bbb"><div style="display:flex;justify-content:space-between;gap:10px"><strong>${q}× ${gustoOnlineEsc(it.name||it.nome||'Prodotto')}</strong><strong>${gustoOnlineEuro(chargeQty*unit)}</strong></div>${Array.from({length:giftQty},(_,n)=>`<div style="display:flex;justify-content:space-between;padding-left:12px;font-size:12px;color:#176b3a;font-weight:800"><span>PEZZO ${Number.isInteger(it._giftPieces?.[n])?it._giftPieces[n]+1:n+1} · OMAGGIO</span><strong>${gustoOnlineEuro(0)}</strong></div>`).join('')}${it._excluded?`<div style="font-size:12px;color:#176b3a;font-weight:800">OMAGGIO / ESCLUSO DAL CONTO · ${gustoOnlineEuro(0)}</div>`:''}${adds.map(a=>`<div style="display:flex;justify-content:space-between;padding-left:12px;font-size:12px"><span>${gustoOnlineEsc(a.name)}</span><strong>+${gustoOnlineEuro(a.price)}</strong></div>`).join('')}${adds.length?`<div style="border-top:1px solid #aaa;margin:4px 0 0 12px;padding-top:4px;display:flex;justify-content:space-between;font-size:12px;font-weight:800"><span>Totale prodotto modificato</span><span>${gustoOnlineEuro(q*unit)}</span></div>`:''}</div>`}).join(''):'Nessun prodotto disponibile';const savedReceiptFee=Number(d.gustoConto?.consegnaConto);const receiptFee=serviceClass==='service-delivery'?Math.max(0,Number.isFinite(savedReceiptFee)?savedReceiptFee:2):0;const receiptSubtotal=billItems.reduce((sum,it)=>{const q=Math.max(1,Number(it.qty??it.quantita??1)),adds=gustoReceiptAdditions(it),unit=adds.length?gustoReceiptBasePrice(it)+adds.reduce((a,x)=>a+x.price,0):Math.max(0,Number(it.price??it.prezzo??0));const gifts=Math.min(q,Math.max(Number(it._giftQty)||0,(it._giftPieces||[]).length));return sum+(it._excluded?0:(q-gifts)*unit);},0);const receiptTotal=savedBillTotal!==null?savedBillTotal:receiptSubtotal+receiptFee;const receiptHtml=`<div id="gusto-receipt-${Number(o.id)}" hidden onclick="event.stopPropagation()" style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:14px;box-sizing:border-box"><div style="width:min(100%,440px);max-height:none;overflow:visible;background:#fff;color:#222;border-radius:12px;padding:10px;box-shadow:0 12px 40px #0006;font-family:Arial,sans-serif"><div style="text-align:center;border-bottom:2px dashed #888;padding-bottom:12px;margin-bottom:10px"><strong style="font-size:20px;letter-spacing:1px">GUSTO</strong><div style="font-size:12px;margin-top:4px">PRECONTO · NON FISCALE</div></div><div style="font-weight:800">Ordine ${gustoOnlineEsc(orderCode)}</div><div style="margin-top:3px"><strong>Nome:</strong> ${gustoOnlineEsc(o.cliente_nome||'Cliente')}</div>${o.telefono?`<div style="font-size:13px;margin-top:3px"><strong>Numero:</strong> ${gustoOnlineEsc(o.telefono)}</div>`:''}<div style="font-size:13px;margin-top:3px"><strong>Tipo ordine:</strong> ${gustoOnlineEsc(o.tipo_ordine||serviceLabel||'Ordine')}</div><div style="font-size:12px;margin-top:3px"><strong>Ricevuto:</strong> ${gustoOnlineEsc(receivedAt)}</div>${dateTime?`<div style="font-size:12px;margin-top:3px"><strong>Giorno/orario richiesto:</strong> ${gustoOnlineEsc(dateTime)}</div>`:''}${(d.indirizzoConsegna||o.indirizzo)?`<div style="font-size:13px;margin-top:3px"><strong>Via/indirizzo:</strong> ${gustoOnlineEsc(d.indirizzoConsegna||o.indirizzo)}</div>`:''}<div style="font-size:13px;margin-top:3px"><strong>Tipo di pagamento:</strong> ${gustoOnlineEsc(o.pagamento||d.pagamento||d.metodoPagamento||d.tipoPagamento||'Non indicato')}</div><div style="margin-top:12px">${receiptItemsHtml}</div><div style="display:flex;justify-content:space-between;padding:9px 0;border-top:2px solid #222;margin-top:8px"><strong>Totale prodotti</strong><strong>${gustoOnlineEuro(receiptSubtotal)}</strong></div>${receiptFee>0?`<div style="display:flex;justify-content:space-between;padding:8px 0"><span>Spese di consegna</span><strong>${gustoOnlineEuro(receiptFee)}</strong></div>`:''}<div style="display:flex;justify-content:space-between;gap:10px;padding:12px 0;font-size:19px;border-top:2px solid #222;margin-top:4px"><strong>TOTALE DA PAGARE</strong><strong>${gustoOnlineEuro(receiptTotal)}</strong></div><button type="button" onclick="event.stopPropagation();gustoCloseOnlineReceipt(${Number(o.id)});gustoEditOnlineOrder(${Number(o.id)})" style="width:100%;padding:13px;margin-top:12px;background:#fff3d8;color:#68420a;border:2px solid #d9b65c;border-radius:9px;font-size:15px;font-weight:900">✏️ MODIFICA COMANDA</button><button type="button" onclick="event.stopPropagation();gustoPrintOnlineOrder(${Number(o.id)})" style="width:100%;padding:13px;margin-top:12px;background:#17452f;color:#fff;border:0;border-radius:9px;font-size:16px;font-weight:900">🖨️ STAMPA DETTAGLIO · PRECONTO</button><button type="button" onclick="gustoCloseOnlineReceipt(${Number(o.id)})" style="width:100%;padding:13px;margin-top:8px;background:#e5f2e9;color:#17452f;border:2px solid #a9c9b4;border-radius:9px;font-size:16px;font-weight:900">← TORNA AL COMANDIERE</button></div></div>`;const detailItemsHtml=summary.items.length?summary.items.map(it=>`<div style="padding:5px 0;border-bottom:1px solid #d9d9d9"><strong>${Math.max(1,Number(it.qty??it.quantita??1))}×</strong> ${gustoOnlineEsc(it.name||it.nome||'Prodotto')}${it.note||it.notes||it.modifiche?`<div style="font-size:12px;font-weight:700">📝 Nota/modifica: ${gustoOnlineEsc(it.note||it.notes||it.modifiche)}</div>`:''}${Array.isArray(it.removed)&&it.removed.length?`<div style="font-size:12px;font-weight:700">⚠ Senza: ${it.removed.map(gustoOnlineEsc).join(', ')}</div>`:''}</div>`).join(''):'Nessun prodotto disponibile';return `<article data-gusto-order-id="${Number(o.id)}" onpointerdown="gustoOrderPressStart(${Number(o.id)})" onpointerup="gustoOrderPressCancel()" onpointerleave="gustoOrderPressCancel()" oncontextmenu="event.preventDefault();gustoOpenOrderActions(${Number(o.id)})" class="online-order-card ${serviceClass} ${pending?'pending':progress?'in-progress':ready?'ready':''} ${deliveryReminder?'gusto-delivery-reminder':''} ${ready&&!gustoReadyAcked(o.id)?'gusto-ready-reminder':''}" role="button" tabindex="0" aria-label="Ordine ${gustoOnlineEsc(orderCode)}" onclick="gustoOnlineCardTap(${Number(o.id)},'${gustoOnlineEsc(st)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();gustoOnlineCardTap(${Number(o.id)},'${gustoOnlineEsc(st)}')}"><div><div class="hrow"><span class="pill ${pending?'red':progress?'orange':'green'}">${pending?(gustoOnlineNeedsSend(st)?'🕒 IN ATTESA DEL CAMERIERE':'🔔 ORDINE CONFERMATO'):ready?'🍽️ ORDINE PRONTO':''}</span><span>${gustoOnlineEsc(serviceLabel)}</span></div><h3 style="margin:7px 0 3px">Ordine ${gustoOnlineEsc(orderCode)}</h3><div style="font-weight:900;font-size:16px;margin:7px 0">${gustoOnlineEsc(o.cliente_nome||'Cliente')}</div><div class="online-order-meta" style="font-weight:800">🕒 Ricevuto: ${gustoOnlineEsc(receivedAt)}</div>${dateTime?`<div class="online-order-meta" style="font-weight:800">📅 ${gustoOnlineEsc(dateTime)}</div>`:''}${o.telefono?`<div class="online-order-meta">☎️ ${gustoOnlineEsc(o.telefono)}</div>`:''}${(d.indirizzoConsegna||o.indirizzo)?`<div class="online-order-meta" style="font-weight:800">📍 ${gustoOnlineEsc(d.indirizzoConsegna||o.indirizzo)}</div>`:''}${(o.pagamento||d.pagamento||d.metodoPagamento||d.tipoPagamento)?`<div class="online-order-meta">💳 Pagamento: ${gustoOnlineEsc(o.pagamento||d.pagamento||d.metodoPagamento||d.tipoPagamento)}</div>`:''}${gustoDeliveryCountdown(o)?`<div class="online-order-meta" style="font-weight:900;color:#9a4d00">${gustoOnlineEsc(gustoDeliveryCountdown(o))}</div>`:''}</div><div><div class="hrow" style="margin:7px 0"><span class="online-order-total">${gustoOnlineEuro(displayedOrderTotal)}</span><span class="online-order-meta">${gustoOnlineEsc(o.telefono||'')}</span></div>${drinksHtml}${kitchenCallHtml}${pending?'<div class="online-order-action">'+(summary.hasServiceOnly?'🥤🍰 SOLO BEVANDE/DOLCI · RESTA AL CAMERIERE':gustoOnlineNeedsSend(st)?'DA INVIARE IN CUCINA QUANDO È IL MOMENTO':'ORDINE CONFERMATO')+'</div>':''}${ready?(serviceClass==='service-delivery'?'<button type="button" class="online-order-action ready-action gusto-delivery-confirm" style="width:100%;min-height:54px;border:2px solid #176b3a;border-radius:10px;padding:12px;background:#dff3e5;color:#17452f;font-weight:900;font-size:15px;cursor:pointer;touch-action:manipulation;position:relative;z-index:10;white-space:normal" onclick="event.preventDefault();event.stopPropagation();gustoOpenDeliveryPayment('+Number(o.id)+',this)">🔔 PRONTO · PROSEGUI CON LA CONSEGNA</button>':'<button type="button" class="online-order-action ready-action gusto-pickup-confirm" style="width:100%;min-height:54px;border:2px solid #176b3a;border-radius:10px;padding:12px;background:#dff3e5;color:#17452f;font-weight:900;font-size:15px;cursor:pointer;touch-action:manipulation;position:relative;z-index:10" onclick="event.preventDefault();event.stopPropagation();gustoConfirmPickup('+Number(o.id)+',this)">🔔 PRONTO · TOCCA DOPO IL RITIRO</button>'):''}${actions}<button type="button" id="gusto-delivery-detail-btn-${Number(o.id)}" class="primary" style="display:block!important;width:100%;min-height:48px;margin-top:8px;padding:11px 8px;background:#e5f2e9!important;color:#17452f!important;border:2px solid #a9c9b4;border-radius:10px;font-size:14px;font-weight:900;white-space:normal" onclick="event.preventDefault();event.stopPropagation();gustoOpenOnlineReceipt(${Number(o.id)})">🧾 VISUALIZZA PRECONTO</button>${receiptHtml}</div></article>`;
   }).join('');
   // La card appena ricreata contiene una copia nascosta del preconto:
@@ -2319,8 +2319,20 @@ async function gustoOpenHistoryDetail(id){
     : (isTable&&coverTotal>0?[{label:'Coperto',detail:coverQty>0?`${coverQty} × ${fmt(coverTotal/coverQty)}`:'Importo coperto',amount:coverTotal}]:[])
   ).map(x=>`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #e1e7e2"><div><strong>${esc(x.label)}</strong><div style="font-size:12px;color:#53665a">${esc(x.detail)}</div></div><strong>${fmt(x.amount)}</strong></div>`).join('');
   const metadata=[['Cliente',o.cliente_nome||d.clienteNome],['Tipo',o.tipo_ordine||kind],['Tavolo',d.tableLabel||d.tableNumber||d.tavolo],['Persone / coperti',d.covers],['Operatore',d.operatorName||d.operatore||d.operatorEmail],['Telefono',o.telefono||d.clienteTelefono],['Indirizzo',d.indirizzoConsegna||o.indirizzo],['Orario previsto',d.orarioPrevisto],['Note',d.notes||d.note]].filter(x=>x[1]!==undefined&&x[1]!==null&&String(x[1]).trim()!=='').map(x=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid #edf0ed"><span style="color:#53665a">${x[0]}</span><strong style="text-align:right">${esc(x[1])}</strong></div>`).join('');
-  box.innerHTML=`<div class="notice" style="margin-top:12px"><strong>${esc(kind)} · ${esc(o.codice_ordine||o.numero_ordine||o.order_code||d.code||('Ordine #'+o.id))}</strong><br>Data: ${esc(date)}<br>Stato: ${esc(o.stato||'—')}<br>Pagamento: <strong>${esc(method)}</strong></div>${section('Riepilogo servizio',metadata)}${section('Prodotti della comanda',mainItemsHtml)}${section('🥤 Bevande',serviceRows(drinkItems))}${section('🍰 Dolci e caffetteria',serviceRows(dessertItems))}${section('Modifiche registrate alla comanda',`<div style="background:#fff8e8;border:1px solid #f0d9a7;border-radius:10px;padding:10px">${changesHtml}</div>`)}${section('Rettifiche del conto e prezzi modificati',`<div style="background:#f7faf7;border:1px solid #dce4dd;border-radius:10px;padding:10px">${billHtml}${bill?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid #dce4dd;font-size:12px">Totale originale: <strong>${fmt(bill.totaleOriginale)}</strong><br>Totale modificato: <strong>${fmt(bill.totaleModificato)}</strong>${bill.aggiornatoIl?`<br>Modificato il: ${esc(new Date(bill.aggiornatoIl).toLocaleString('it-IT'))}`:''}${bill.operatore?`<br>Operatore: ${esc(bill.operatore)}`:''}</div>`:''}</div>`)}${extras?`<h3 style="margin-top:18px">Altri importi</h3>${extras}`:''}<div style="display:flex;justify-content:space-between;gap:10px;border-top:2px solid #17452f;margin-top:14px;padding-top:12px;font-size:20px"><strong>TOTALE REGISTRATO</strong><strong>${fmt(total)}</strong></div>`;
+  const splitPayments=Array.isArray(d.gustoPagamentiDivisi?.pagamenti)?d.gustoPagamentiDivisi.pagamenti:[];
+  const splitPaymentsHtml=splitPayments.length?splitPayments.map((p,i)=>`<div style="padding:9px 0;border-bottom:1px solid #e1e7e2"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${p.tipo==='romana'?'Quota '+(p.numeroPersona||i+1):'Prodotti pagati'}</strong><strong>${fmt(p.importo)}</strong></div><div style="font-size:12px;color:#53665a;margin:3px 0 6px">${esc(p.metodo||'Non indicato')} · ${p.tipo==='romana'?'Quota '+esc(p.numeroPersona||i+1)+'/'+esc(p.numeroPersone||''):(p.items||[]).map(x=>esc(x.name)+' × '+esc(x.qty)).join(', ')} · ${p.dataOra?esc(new Date(p.dataOra).toLocaleString('it-IT')):'Data non disponibile'}</div><button type="button" onclick="gustoPrintHistorySplitPayment(${Number(o.id)},${i})" style="width:100%;min-height:38px;background:#17452f;color:#fff;border:0;border-radius:8px;font-weight:900">🖨️ STAMPA QUESTO PAGAMENTO</button></div>`).join(''):'<p class="muted">Nessun pagamento diviso registrato.</p>';
+  box.innerHTML=`<div class="notice" style="margin-top:12px"><strong>${esc(kind)} · ${esc(o.codice_ordine||o.numero_ordine||o.order_code||d.code||('Ordine #'+o.id))}</strong><br>Data: ${esc(date)}<br>Stato: ${esc(o.stato||'—')}<br>Pagamento: <strong>${esc(method)}</strong></div>${section('Pagamenti effettuati',splitPaymentsHtml)}${section('Riepilogo servizio',metadata)}${section('Prodotti della comanda',mainItemsHtml)}${section('🥤 Bevande',serviceRows(drinkItems))}${section('🍰 Dolci e caffetteria',serviceRows(dessertItems))}${section('Modifiche registrate alla comanda',`<div style="background:#fff8e8;border:1px solid #f0d9a7;border-radius:10px;padding:10px">${changesHtml}</div>`)}${section('Rettifiche del conto e prezzi modificati',`<div style="background:#f7faf7;border:1px solid #dce4dd;border-radius:10px;padding:10px">${billHtml}${bill?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid #dce4dd;font-size:12px">Totale originale: <strong>${fmt(bill.totaleOriginale)}</strong><br>Totale modificato: <strong>${fmt(bill.totaleModificato)}</strong>${bill.aggiornatoIl?`<br>Modificato il: ${esc(new Date(bill.aggiornatoIl).toLocaleString('it-IT'))}`:''}${bill.operatore?`<br>Operatore: ${esc(bill.operatore)}`:''}</div>`:''}</div>`)}${extras?`<h3 style="margin-top:18px">Altri importi</h3>${extras}`:''}<div style="display:flex;justify-content:space-between;gap:10px;border-top:2px solid #17452f;margin-top:14px;padding-top:12px;font-size:20px"><strong>TOTALE REGISTRATO</strong><strong>${fmt(total)}</strong></div>`;
  }catch(e){box.innerHTML='<p class="notice warn">Impossibile leggere il dettaglio: '+gustoOnlineEsc(e.message||'errore')+'</p>'}
+}
+async function gustoPrintHistorySplitPayment(orderId,index){
+ try{
+  const {data,error}=await sb.from('ordini').select('id,dettagli,tipo_ordine,cliente_nome').eq('id',orderId).single();if(error)throw error;
+  const d=gustoHistoryDetails(data),p=d.gustoPagamentiDivisi?.pagamenti?.[Number(index)];if(!p)throw new Error('Pagamento non trovato nello storico.');
+  const lines=['GUSTO','RICEVUTA PAGAMENTO - NON FISCALE','--------------------------------','Ordine: '+String(data.tipo_ordine||'Comanda')+' #'+orderId,'Data: '+(p.dataOra?new Date(p.dataOra).toLocaleString('it-IT'):'-'),'Pagamento: '+String(p.metodo||'-'),'--------------------------------'];
+  if(p.tipo==='romana')lines.push('QUOTA ALLA ROMANA','Quota '+String(p.numeroPersona||'')+'/'+String(p.numeroPersone||''));else{lines.push('PRODOTTI PAGATI');(p.items||[]).forEach(x=>{const q=Number(x.qty)||0,unit=Number(x.prezzoUnitario)||0;lines.push(q+' x '+String(x.name||'Prodotto'),'  EUR '+(q*unit).toFixed(2));});}
+  lines.push('--------------------------------','TOTALE PAGATO  EUR '+(Number(p.importo)||0).toFixed(2),'','Grazie!','');
+  await gustoSendToPosPrinter(lines.join('\n'));
+ }catch(e){alert('Impossibile stampare il pagamento: '+(e.message||'errore'));}
 }
 function gustoCloseHistoryDetail(){document.getElementById('gustoHistoryDetailOverlay')?.classList.add('hidden')}
 </script><style id="gusto-fast-button-feedback">
@@ -2619,27 +2631,328 @@ body.gusto-table-order-composer-active #orderMetaPanel>.hrow{
  #orderMetaPanel #coverControls .count button{width:24px!important;height:24px!important;min-height:24px!important;}
 }
 </style>
-<script id="gusto-header-courses-single-row-final-js">
-(function(){
-  function placeOrderHeaderControls(){
-    const meta=document.getElementById('orderMetaPanel');
-    const header=meta?.querySelector(':scope > .hrow');
-    const courses=document.getElementById('pickerCourses');
-    if(!header||!courses)return;
-    if(courses.parentElement!==header){
-      const title=header.querySelector(':scope > div:first-child');
-      if(title)title.insertAdjacentElement('afterend',courses);else header.prepend(courses);
-    }
-    // I coperti si gestiscono nel riepilogo della comanda, non nella riga delle uscite.
-    const covers=document.getElementById('coverControls');
-    if(covers) covers.classList.add('hidden');
+<script id="gusto-ognuno-il-suo">
+/* GUSTO - OGNUNO IL SUO: selezione quantità, pagamenti e storico prodotti saldati */
+let gustoSplitState=null;
+function gustoSplitEuro(n){return '€ '+(Math.round((Number(n)||0)*100)/100).toFixed(2).replace('.',',')}
+function gustoSplitDetails(row){let d=row?.dettagli||{};try{if(typeof d==='string')d=JSON.parse(d||'{}')}catch{d={}}return d&&typeof d==='object'?d:{}}
+function gustoSplitLedger(st){
+ const d=gustoSplitDetails(st.rows[0]);
+ return Array.isArray(d.gustoPagamentiDivisi?.pagamenti)?d.gustoPagamentiDivisi.pagamenti:[];
+}
+function gustoSplitPaidQty(st,key){
+ return gustoSplitLedger(st).reduce((n,p)=>n+(p.items||[]).reduce((a,x)=>a+(x.key===key?Number(x.qty)||0:0),0),0);
+}
+function gustoSplitRecalc(st){
+ st.items.forEach(it=>{
+  it.paidQty=gustoSplitPaidQty(st,it.key);
+  it.available=Math.max(0,it.qty-it.paidQty);
+  it.selectedQty=Math.min(Number(it.selectedQty)||0,it.available);
+ });
+}
+function gustoSplitOpenModal(state){
+ gustoSplitState=state;state.canonicalId=state.canonicalId||state.rows?.[0]?.id;gustoSplitRecalc(state);
+ document.getElementById('gusto-split-payment-overlay')?.remove();
+ const overlay=document.createElement('div');overlay.id='gusto-split-payment-overlay';
+ overlay.style.cssText='position:fixed;inset:0;z-index:100200;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box';
+ overlay.innerHTML=`<div style="width:min(760px,100%);max-height:96dvh;overflow:auto;background:#fff;color:#18221b;border-radius:16px;padding:14px;box-shadow:0 15px 45px #0008">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0">👥 OGNUNO IL SUO</h2><button onclick="gustoSplitClose()">✕</button></div>
+ <div style="font-size:13px;color:#526257;margin:5px 0 10px">${esc(state.label||'Ordine')} · Totale iniziale ${gustoSplitEuro(state.total)}</div>
+ <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px">
+  <select id="gustoSplitMethod" aria-label="Metodo di pagamento"><option value="Contanti">💵 Contanti</option><option value="POS">💳 POS</option><option value="Altro">Altro</option></select>
+ </div>
+ <div style="font-weight:900;margin:8px 0">PRODOTTI ANCORA DA PAGARE</div>
+ <div id="gustoSplitProductRows"></div>
+ <div style="border-top:2px solid #dce4dd;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:900;font-size:18px"><span>TOTALE SELEZIONATO</span><span id="gustoSplitSelectedTotal">€ 0,00</span></div>
+ <button type="button" class="primary" style="width:100%;margin-top:10px;min-height:48px" onclick="gustoSplitSavePayment()">CONFERMA E REGISTRA PAGAMENTO</button>
+ <div style="border-top:2px solid #dce4dd;margin-top:16px;padding-top:10px;font-weight:900">✓ PRODOTTI GIÀ PAGATI</div>
+ <div id="gustoSplitPaidHistory"></div>
+ <div style="border-top:2px solid #dce4dd;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:900"><span>RESIDUO COMANDA</span><span id="gustoSplitRemaining"></span></div>
+ <button id="gustoSplitCompleteBtn" type="button" class="primary" style="display:none;width:100%;min-height:52px;margin-top:10px;background:#176b3a;color:#fff;font-size:17px;font-weight:950" onclick="gustoSplitComplete()">✓ COMPLETA COMANDA</button>
+ <button type="button" style="width:100%;margin-top:8px" onclick="gustoSplitClose()">Chiudi</button>
+ </div>`;
+ document.body.appendChild(overlay);gustoSplitRender();
+}
+function gustoSplitRender(){
+ const st=gustoSplitState;if(!st)return;gustoSplitRecalc(st);
+ const list=document.getElementById('gustoSplitProductRows');
+ const available=st.items.filter(x=>x.available>0);
+ list.innerHTML=available.length?available.map((it)=>`<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #e2e8e3">
+ <div><div style="font-weight:850">${esc(it.name)}</div><div style="font-size:12px;color:#657267">${gustoSplitEuro(it.price)} cad. · disponibili ${it.available}</div></div>
+ <div style="display:flex;align-items:center;gap:6px">${it.selectedQty>0?`<button type="button" aria-label="Diminuisci quantità" onclick="gustoSplitQty('${esc(it.key)}',-1)" style="min-width:36px;min-height:36px">−</button><strong style="min-width:22px;text-align:center">${it.selectedQty}</strong><button type="button" aria-label="Aumenta quantità" onclick="gustoSplitQty('${esc(it.key)}',1)" style="min-width:36px;min-height:36px" ${it.selectedQty>=it.available?'disabled':''}>+</button>`:`<button type="button" class="primary" onclick="gustoSplitQty('${esc(it.key)}',1)" style="min-height:36px;padding:6px 10px">SCEGLI</button>`}</div>
+ </div>`).join(''):'<div style="padding:12px;text-align:center;color:#68756b">Tutti i prodotti risultano già pagati.</div>';
+ const paid=gustoSplitLedger(st);
+ const hist=document.getElementById('gustoSplitPaidHistory');
+ hist.innerHTML=paid.length?paid.map((p,index)=>`<div style="padding:9px 0;border-bottom:1px solid #e2e8e3"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${p.tipo==='romana'?'Quota '+(p.numeroPersona||index+1):'Prodotti pagati'}</strong><strong>${gustoSplitEuro(p.importo)}</strong></div><div style="font-size:12px;color:#657267;margin:3px 0 7px">${esc(p.metodo||'')} · ${p.tipo==='romana'?`Quota ${p.numeroPersona||''}/${p.numeroPersone||''}`:(p.items||[]).map(x=>`${esc(x.name)} × ${x.qty}`).join(', ')}</div><button type="button" onclick="gustoSplitPrintPayment(${index})" style="width:100%;min-height:40px;background:#17452f;color:#fff;border:0;border-radius:8px;font-weight:900">🖨️ STAMPA QUESTO PAGAMENTO</button></div>`).join(''):'<div style="padding:8px 0;color:#68756b">Nessun prodotto ancora saldato.</div>';
+ const selected=st.items.reduce((n,x)=>n+(Number(x.selectedQty)||0)*(Number(x.price)||0),0);
+ const totalPaid=paid.reduce((n,p)=>n+(Number(p.importo)||0),0);
+ document.getElementById('gustoSplitSelectedTotal').textContent=gustoSplitEuro(selected);
+ const remaining=Math.max(0,Math.round((st.total-totalPaid)*100)/100);
+ document.getElementById('gustoSplitRemaining').textContent=gustoSplitEuro(remaining);
+ const completeBtn=document.getElementById('gustoSplitCompleteBtn');if(completeBtn)completeBtn.style.display=remaining<=0.009?'block':'none';
+}
+async function gustoSplitPrintPayment(index){
+ const st=gustoSplitState;if(!st)return;
+ const payment=gustoSplitLedger(st)[Number(index)];if(!payment)return alert('Pagamento non trovato.');
+ const lines=['GUSTO','RICEVUTA PAGAMENTO - NON FISCALE','--------------------------------',
+  'Ordine: '+String(st.label||'Comanda'),
+  'Data: '+(payment.dataOra?new Date(payment.dataOra).toLocaleString('it-IT'):'-'),
+  'Pagamento: '+String(payment.metodo||'-'),
+  '--------------------------------','PRODOTTI PAGATI'];
+ if(payment.tipo==='romana'){
+  lines.push('QUOTA ALLA ROMANA', 'Persona: '+String(payment.persona||payment.cliente||'Cliente'), 'Quota '+String(payment.numeroPersona||'')+'/'+String(payment.numeroPersone||''));
+ }else{
+  (payment.items||[]).forEach(item=>{
+   const qty=Math.max(0,Number(item.qty)||0),unit=Math.max(0,Number(item.prezzoUnitario)||0);
+   lines.push(String(qty)+' x '+String(item.name||'Prodotto'));
+   lines.push('  EUR '+(qty*unit).toFixed(2));
+  });
+ }
+ lines.push('--------------------------------','TOTALE PAGATO  EUR '+(Number(payment.importo)||0).toFixed(2),'','Grazie!','');
+ try{await gustoSendToPosPrinter(lines.join('\n'));}
+ catch(e){alert('Impossibile stampare il pagamento: '+(e.message||'errore'))}
+}
+function gustoSplitQty(key,delta){
+ const it=gustoSplitState?.items.find(x=>x.key===key);if(!it)return;
+ it.selectedQty=Math.max(0,Math.min(it.available,(Number(it.selectedQty)||0)+delta));
+ gustoSplitRender();
+}
+function gustoSplitClose(){document.getElementById('gusto-split-payment-overlay')?.remove();gustoSplitState=null}
+async function gustoFinalizePaidOrder(st,ledger,totalPaid,methods){
+ const now=new Date().toISOString();
+ if(st.table){
+  const t=tables.find(x=>Number(x.number)===Number(st.tableNo));
+  const session=st.sessionId||(t?.sessionId||'');
+  const canonical=[...st.rows].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')))[0]||st.rows[0];
+  if(!canonical)throw new Error('Comanda tavolo non trovata.');
+  for(const row of st.rows){
+   const d=gustoSplitDetails(row);
+   const isCanonical=String(row.id)===String(canonical.id);
+   d.servizioChiuso=true;d.comandaChiusa=true;d.pagamentoConfermato=true;d.servizioChiusoIl=now;
+   d.metodoPagamento=methods.join(' + ');
+   d.gustoPagamentiDivisi={...(d.gustoPagamentiDivisi||{}),versione:2,totale:st.total,pagamenti:ledger,aggiornatoIl:now,saldato:true};
+   d.gustoCassa={...(d.gustoCassa||{}),tipo:'chiusura_tavolo_pagamenti_divisi',riepilogo:isCanonical,sessionId:session,tavolo:st.tableNo,importoServizio:st.total,importoConfermato:st.total,metodoPagamento:methods.join(' + '),chiusoIl:now,chiusoDa:user?.id||null,operatore:staffName||user?.email||'Operatore'};
+   const patch={dettagli:d,stato:'Consegnato'};
+   if(isCanonical){patch.totale=st.total;patch.pagamento=methods.join(' + ');}else patch.totale=0;
+   const {data,error}=await sb.from('ordini').update(patch).eq('id',row.id).select('id').maybeSingle();
+   if(error)throw error;if(!data)throw new Error('Supabase non ha confermato la chiusura della comanda.');
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',placeOrderHeaderControls,{once:true});
-  else placeOrderHeaderControls();
-  const observer=new MutationObserver(placeOrderHeaderControls);
-  observer.observe(document.documentElement,{childList:true,subtree:true});
-  window.addEventListener('beforeunload',()=>observer.disconnect(),{once:true});
-})();
+  if(t&&String(t.sessionId)===String(session)){
+   t.covers=2;t.sessionId='';t.orderNumber=0;t.items={};t.stages=[];t.hasSent=false;t.existingCover=0;t.orderCodes=[];t.lastOrderId=null;t.pendingCourseRequestId=null;t.openedAt=null;t.fidelityCustomerId=null;t.fidelityCustomerName=null;t.fidelityVoucher=null;t.groupNumbers=null;
+   saveTables();renderTables();
+  }
+ }else{
+  const canonical=st.rows[0];
+  const d=gustoSplitDetails(canonical);
+  d.pagamentoConfermato=true;d.comandaChiusa=true;d.pagamentoDivisoSaldato=true;d.pagamentoDivisoChiusoIl=now;
+  d.gustoPagamentiDivisi={...(d.gustoPagamentiDivisi||{}),versione:2,totale:st.total,pagamenti:ledger,aggiornatoIl:now,saldato:true};
+  const {data,error}=await sb.from('ordini').update({dettagli:d,stato:'Consegnato',pagamento:methods.join(' + ')}).eq('id',canonical.id).select('id').maybeSingle();
+  if(error)throw error;if(!data)throw new Error('Supabase non ha confermato la chiusura della comanda.');
+ }
+}
+async function gustoSplitSavePayment(){
+ const st=gustoSplitState;if(!st||!user||!sb)return alert('Sessione non disponibile.');
+ const saveBtn=document.querySelector('#gusto-split-payment-overlay button[onclick="gustoSplitSavePayment()"]');
+ if(st.savingPayment)return;
+ const method=document.getElementById('gustoSplitMethod')?.value||'Contanti';
+ const selected=st.items.filter(x=>(Number(x.selectedQty)||0)>0);
+ if(!selected.length)return alert('Seleziona almeno un prodotto e la quantità da pagare.');
+ const amount=Math.round(selected.reduce((n,x)=>n+(Number(x.selectedQty)||0)*(Number(x.price)||0),0)*100)/100;
+ if(!Number.isFinite(amount)||amount<=0)return alert('Il totale selezionato non è valido.');
+ const payment={importo:amount,metodo:method,pagato:true,dataOra:new Date().toISOString(),items:selected.map(x=>({key:x.key,name:x.name,qty:Number(x.selectedQty)||0,prezzoUnitario:Number(x.price)||0}))};
+ const canonical=st.rows.find(r=>String(r.id)===String(st.canonicalId))||st.rows[0];
+ if(!canonical)return alert('Comanda non trovata. Riapri il pagamento e riprova.');
+ st.savingPayment=true;if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='REGISTRAZIONE IN CORSO…';}
+ try{
+  const d=gustoSplitDetails(canonical);
+  const old=Array.isArray(d.gustoPagamentiDivisi?.pagamenti)?d.gustoPagamentiDivisi.pagamenti:[];
+  const ledger=[...old,payment];
+  const paidTotal=ledger.reduce((n,p)=>n+(Number(p.importo)||0),0);
+  const patchDetails={...d,gustoPagamentiDivisi:{...(d.gustoPagamentiDivisi||{}),versione:2,modalita:'prodotti',totale:st.total,pagamenti:ledger,aggiornatoIl:new Date().toISOString()}};
+  const methods=[...new Set(ledger.map(p=>p.metodo).filter(Boolean))];
+  const {data,error}=await sb.from('ordini').update({dettagli:patchDetails,pagamento:methods.join(' + ')}).eq('id',canonical.id).select('id').maybeSingle();
+  if(error)throw error;if(!data)throw new Error('Il database non ha confermato il salvataggio. Controlla la connessione e riprova.');
+  // Aggiorna subito lo stato locale: il pagamento appare anche se il successivo refresh fallisce.
+  canonical.dettagli=patchDetails;canonical.pagamento=methods.join(' + ');
+  st.rows=st.rows.map(r=>String(r.id)===String(canonical.id)?canonical:r);
+  st.items.forEach(it=>it.selectedQty=0);
+  gustoSplitRender();
+  alert(paidTotal>=st.total-0.01?'Tutti i pagamenti risultano completati. Premi COMPLETA COMANDA per chiudere l’ordine.':'Pagamento registrato: '+gustoSplitEuro(amount)+' · '+method+'. La comanda rimane aperta.');
+  // Ricarica i dati, mantenendo sempre la riga che contiene il registro pagamenti come prima riga.
+  if(st.table){
+   const r=await sb.from('ordini').select('id,created_at,totale,prodotti,dettagli,tipo_ordine,stato').in('id',st.rows.map(x=>x.id));
+   if(!r.error&&Array.isArray(r.data)){const ordered=r.data.sort((a,b)=>String(a.id)===String(canonical.id)?-1:String(b.id)===String(canonical.id)?1:String(a.created_at||'').localeCompare(String(b.created_at||'')));st.rows=ordered;st.items=gustoSplitBuildItems(ordered);}
+  }else{
+   await gustoLoadOnlineOrders();
+   const r=await sb.from('ordini').select('id,totale,prodotti,dettagli,tipo_ordine,stato,cliente_nome').eq('id',canonical.id).single();
+   if(!r.error&&r.data){st.rows=[r.data];st.items=gustoSplitBuildItems([r.data]);}
+  }
+  gustoSplitRender();
+ }catch(e){alert('Errore nel salvataggio del pagamento: '+(e.message||'errore Supabase'));}
+ finally{st.savingPayment=false;if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='CONFERMA E REGISTRA PAGAMENTO';}}
+}
+async function gustoSplitComplete(){
+ const st=gustoSplitState;if(!st||!user||!sb)return alert('Sessione non disponibile.');
+ const ledger=gustoSplitLedger(st),paid=ledger.reduce((n,p)=>n+(Number(p.importo)||0),0);
+ if(paid<st.total-0.01)return alert('Non puoi completare: resta ancora un importo da pagare.');
+ const methods=[...new Set(ledger.map(p=>p.metodo).filter(Boolean))];
+ try{await gustoFinalizePaidOrder(st,ledger,paid,methods);gustoSplitClose();if(!st.table)await gustoLoadOnlineOrders();if(typeof gustoLoadDailyHistory==='function')await gustoLoadDailyHistory();alert('Comanda completata. Tavolo liberato oppure ordine rimosso dagli ordini attivi e trasferito nello storico.');}
+ catch(e){alert('Errore durante la chiusura della comanda: '+(e.message||'errore Supabase'));}
+}
+function gustoSplitBuildItems(rows){
+ const result=[];
+ (rows||[]).forEach(o=>{
+  const products=Array.isArray(o.prodotti)?o.prodotti:[];
+  products.forEach((it,index)=>{
+   const q=Math.max(1,Number(it.qty??it.quantita)||1),adds=gustoReceiptAdditions(it),base=gustoReceiptBasePrice(it);
+   result.push({key:String(o.id)+':'+index,name:String(it.name||it.nome||it.prodotto||'Prodotto'),qty:q,price:Math.round((base+adds.reduce((a,x)=>a+x.price,0))*100)/100,selectedQty:0});
+  });
+  // Il coperto è salvato nei dettagli della comanda e non sempre nell'array prodotti
+  // inviato alla cucina: lo aggiungiamo come voce selezionabile per saldarlo.
+  const d=gustoSplitDetails(o);
+  const hasCoverProduct=products.some(x=>String(x.name||x.nome||'').trim().toLocaleLowerCase('it-IT')==='coperto');
+  const coverQty=Math.max(0,Number(d.covers??d.coperti??d.numeroCoperti??d.numero_coperti??0)||0);
+  let coverTotal=Math.max(0,Number(d.copertoTotale??d.coverTotal??d.totaleCoperti??d.totale_coperti??0)||0);
+  const coverPrice=Math.max(0,Number(d.prezzoCoperto??d.copertoPrezzo??d.coverPrice??COVER_PRICE)||0);
+  if(!hasCoverProduct&&coverQty>0){
+   if(coverTotal<=0)coverTotal=coverQty*coverPrice;
+   const unit=Math.round((coverTotal/coverQty)*100)/100;
+   result.push({key:String(o.id)+':coperto',name:'Coperto',qty:coverQty,price:unit,selectedQty:0});
+  }
+ });
+ return result;
+}
+async function gustoOpenSplitPaymentForOrder(id){
+ if(!user||!sb)return alert('Accedi al Comandiere.');
+ try{
+  const {data,error}=await sb.from('ordini').select('id,totale,prodotti,dettagli,tipo_ordine,stato,cliente_nome').eq('id',id).single();if(error)throw error;
+  const d=gustoSplitDetails(data),fee=gustoOnlineServiceClass(data)==='service-delivery'?Math.max(0,Number(d.gustoConto?.consegnaConto??2)):0;
+  const total=Number(d.gustoConto?.totaleModificato??data.totale??0)+fee;
+  gustoSplitOpenModal({rows:[data],label:(data.tipo_ordine||'Ordine')+' · '+(data.cliente_nome||'#'+id),total,items:gustoSplitBuildItems([data]),table:false});
+ }catch(e){alert('Non riesco ad aprire Ognuno il suo: '+(e.message||'errore'))}
+}
+function gustoCloseBillEditorForSplit(){
+ // Chiude subito il controllo conto/preconto prima di aprire una delle due procedure di pagamento.
+ ['gusto-table-bill-editor','tablePrecontoOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove();});
+ gustoTableBillEditState=null;
+}
+async function gustoOpenSplitPaymentForTable(tableNo){
+ if(!user||!sb)return alert('Accedi al Comandiere.');
+ /* Il controllo conto viene chiuso immediatamente: resta visibile solo la procedura di pagamento. */
+ gustoCloseBillEditorForSplit();
+ try{
+  const t=tables.find(x=>Number(x.number)===Number(tableNo));if(!t)throw new Error('Tavolo non trovato');
+  const {data,error}=await sb.from('ordini').select('id,created_at,totale,prodotti,dettagli,tipo_ordine,stato').eq('tipo_ordine','Comanda al tavolo').gte('created_at',CLEAN_START).order('created_at',{ascending:true}).limit(300);if(error)throw error;
+  const rows=(data||[]).filter(o=>{const d=gustoSplitDetails(o);return String(d.comandaSession||'')===String(t.sessionId)&&String(d.tableNumber??'')===String(tableNo)&&!d.servizioChiuso&&!d.servizioAnnullato});
+  if(!rows.length)throw new Error('Nessuna comanda attiva trovata per il tavolo.');
+  const total=rows.reduce((n,o)=>n+(Number(o.totale)||0),0);
+  gustoSplitOpenModal({rows,label:'Tavolo '+tableNo,total,items:gustoSplitBuildItems(rows),table:true,tableNo:Number(tableNo),sessionId:t.sessionId});
+ }catch(e){alert('Non riesco ad aprire Ognuno il suo: '+(e.message||'errore'))}
+}
+
+
+/* GUSTO - PAGAMENTO ALLA ROMANA: quote uguali, registrate una persona alla volta */
+let gustoRomanState=null;
+function gustoRomanEuro(n){return '€ '+(Math.round((Number(n)||0)*100)/100).toFixed(2).replace('.',',')}
+function gustoRomanOpen(state){
+ gustoRomanState=state;
+ document.getElementById('gusto-roman-overlay')?.remove();
+ const overlay=document.createElement('div');overlay.id='gusto-roman-overlay';
+ overlay.style.cssText='position:fixed;inset:0;z-index:100210;background:rgba(0,0,0,.74);display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box';
+ overlay.innerHTML=`<div style="width:min(520px,100%);max-height:96dvh;overflow:auto;background:#fff;color:#18221b;border-radius:16px;padding:15px;box-shadow:0 15px 45px #0008">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0">➗ CONTO ALLA ROMANA</h2><button onclick="gustoRomanClose()">✕</button></div>
+ <div style="font-size:13px;color:#526257;margin:6px 0 12px">${esc(state.label||'Ordine')} · Conto totale ${gustoRomanEuro(state.total)}</div>
+ <label style="display:block;font-weight:800;margin-bottom:5px" for="gustoRomanPeople">Dividi il conto tra quante persone?</label>
+ <div style="display:flex;align-items:center;gap:8px"><button type="button" onclick="gustoRomanChange(-1)" style="min-width:44px;min-height:44px">−</button><input id="gustoRomanPeople" type="number" min="1" max="100" step="1" value="2" oninput="gustoRomanRender()" style="width:100%;text-align:center;font-size:22px;font-weight:900"><button type="button" onclick="gustoRomanChange(1)" style="min-width:44px;min-height:44px">+</button></div>
+ <div style="background:#edf4ee;border-radius:10px;padding:12px;margin:12px 0;text-align:center"><div style="font-size:12px;font-weight:800;color:#526257">QUOTA PER PERSONA</div><div id="gustoRomanShare" style="font-size:28px;font-weight:950;color:#17452f"></div><div id="gustoRomanPaidSummary" style="font-size:12px;margin-top:4px"></div></div>
+ <label style="display:block;font-weight:800;margin:8px 0 5px">Registra la prossima quota</label>
+ <div id="gustoRomanNext" style="font-size:14px;margin-bottom:8px"></div>
+ <select id="gustoRomanMethod" style="width:100%;min-height:42px"><option value="Contanti">💵 Contanti</option><option value="POS">💳 POS</option><option value="Altro">Altro</option></select>
+ <button type="button" class="primary" onclick="gustoRomanSaveShare()" style="width:100%;min-height:48px;margin-top:10px">CONFERMA PAGAMENTO QUOTA</button>
+ <div style="border-top:2px solid #dce4dd;margin-top:14px;padding-top:10px;font-weight:900">PAGAMENTI REGISTRATI</div><div id="gustoRomanHistory"></div>
+ <div style="display:flex;justify-content:space-between;border-top:2px solid #dce4dd;padding-top:10px;margin-top:10px;font-weight:900"><span>RESIDUO DA PAGARE</span><span id="gustoRomanRemaining"></span></div>
+ <button id="gustoRomanCompleteBtn" type="button" class="primary" style="display:none;width:100%;min-height:52px;margin-top:10px;background:#176b3a;color:#fff;font-size:17px;font-weight:950" onclick="gustoRomanComplete()">✓ COMPLETA COMANDA</button>
+ <button type="button" onclick="gustoRomanClose()" style="width:100%;margin-top:10px;min-height:40px">Chiudi</button>
+ </div>`;
+ document.body.appendChild(overlay);gustoRomanRender();
+}
+function gustoRomanClose(){document.getElementById('gusto-roman-overlay')?.remove();gustoRomanState=null}
+function gustoRomanChange(delta){const el=document.getElementById('gustoRomanPeople');if(!el)return;el.value=Math.max(1,Math.min(100,(Number(el.value)||1)+delta));gustoRomanRender()}
+function gustoRomanLedger(){const st=gustoRomanState;return gustoSplitLedger(st).filter(p=>p.tipo==='romana')}
+async function gustoRomanPrintPayment(index){
+ const p=gustoRomanLedger()[Number(index)];if(!p)return alert('Pagamento non trovato.');
+ const lines=['GUSTO','RICEVUTA PAGAMENTO - NON FISCALE','--------------------------------','Ordine: '+String(gustoRomanState?.label||'Comanda'),'Quota: '+String(p.numeroPersona||'')+'/'+String(p.numeroPersone||''),'Data: '+(p.dataOra?new Date(p.dataOra).toLocaleString('it-IT'):'-'),'Pagamento: '+String(p.metodo||'-'),'--------------------------------','QUOTA PAGATA  EUR '+(Number(p.importo)||0).toFixed(2),'','Grazie!',''];
+ try{await gustoSendToPosPrinter(lines.join('\n'));}catch(e){alert('Impossibile stampare la quota: '+(e.message||'errore'));}
+}
+function gustoRomanRender(){
+ const st=gustoRomanState;if(!st)return;
+ const people=Math.max(1,Math.min(100,Math.floor(Number(document.getElementById('gustoRomanPeople')?.value)||1)));
+ const paid=gustoRomanLedger(),paidTotal=paid.reduce((n,p)=>n+(Number(p.importo)||0),0),remaining=Math.max(0,Math.round((st.total-paidTotal)*100)/100);
+ const share=Math.floor((st.total/people)*100)/100;
+ const next=Math.min(people,paid.length+1),quota=next===people?Math.round((st.total-share*(people-1))*100)/100:share;
+ const peopleInput=document.getElementById('gustoRomanPeople');if(peopleInput)peopleInput.disabled=paid.length>0;
+ document.getElementById('gustoRomanShare').textContent=gustoRomanEuro(share);
+ document.getElementById('gustoRomanPaidSummary').textContent=`${paid.length} di ${people} quote registrate · ${gustoRomanEuro(paidTotal)} pagati`;
+ document.getElementById('gustoRomanNext').textContent=remaining<=0?'Conto completamente saldato.':`Persona ${next} di ${people}: ${gustoRomanEuro(Math.min(quota,remaining))}`;
+ const hist=document.getElementById('gustoRomanHistory');
+ hist.innerHTML=paid.length?paid.map((p,i)=>`<div style="padding:7px 0;border-bottom:1px solid #e2e8e3"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span><b>Quota ${p.numeroPersona||i+1}</b><small style="display:block;color:#657267">${esc(p.metodo||'')} · quota ${p.numeroPersona||i+1}/${p.numeroPersone||people}</small></span><b>${gustoRomanEuro(p.importo)}</b></div><button type="button" onclick="gustoRomanPrintPayment(${i})" style="width:100%;min-height:36px;margin-top:5px;background:#17452f;color:#fff;border:0;border-radius:8px;font-weight:900">🖨️ STAMPA QUESTA QUOTA</button></div>`).join(''):'<div style="padding:7px 0;color:#68756b">Nessun pagamento registrato.</div>';
+ document.getElementById('gustoRomanRemaining').textContent=gustoRomanEuro(remaining);
+ const btn=document.querySelector('#gusto-roman-overlay button.primary');if(btn)btn.disabled=remaining<=0||paid.length>=people;
+ const completeBtn=document.getElementById('gustoRomanCompleteBtn');if(completeBtn)completeBtn.style.display=remaining<=0.009?'block':'none';
+}
+async function gustoRomanSaveShare(){
+ const st=gustoRomanState;if(!st||!user||!sb)return alert('Sessione non disponibile.');
+ const people=Math.max(1,Math.min(100,Math.floor(Number(document.getElementById('gustoRomanPeople')?.value)||1)));
+ const paid=gustoRomanLedger();if(paid.length>=people)return alert('Tutte le quote previste risultano già pagate.');
+ const totalPaid=paid.reduce((n,p)=>n+(Number(p.importo)||0),0),remaining=Math.max(0,Math.round((st.total-totalPaid)*100)/100);
+ const base=Math.floor((st.total/people)*100)/100,idx=paid.length+1;
+ const amount=idx===people?Math.round((st.total-base*(people-1))*100)/100:base;
+ const method=document.getElementById('gustoRomanMethod')?.value||'Contanti';
+ const payment={tipo:'romana',numeroPersona:idx,numeroPersone:people,importo:Math.min(amount,remaining),metodo:method,pagato:true,dataOra:new Date().toISOString(),items:[]};
+ const canonical=st.rows[0];
+ try{
+  const d=gustoSplitDetails(canonical),old=Array.isArray(d.gustoPagamentiDivisi?.pagamenti)?d.gustoPagamentiDivisi.pagamenti:[],ledger=[...old,payment];
+  const paidAll=ledger.reduce((n,p)=>n+(Number(p.importo)||0),0),methods=[...new Set(ledger.map(p=>p.metodo).filter(Boolean))];
+  const patch={dettagli:{...d,gustoPagamentiDivisi:{versione:2,modalita:'mista',totale:st.total,pagamenti:ledger,aggiornatoIl:new Date().toISOString()}},pagamento:methods.join(' + ')};
+  const {data,error}=await sb.from('ordini').update(patch).eq('id',canonical.id).select('id').maybeSingle();if(error)throw error;if(!data)throw new Error('Salvataggio non confermato da Supabase.');
+  if(paidAll>=st.total-0.01){
+   alert('Tutte le quote sono state pagate. Premi COMPLETA COMANDA per chiudere l’ordine.');
+   gustoRomanRender();
+   return;
+  }
+  if(st.table){const r=await sb.from('ordini').select('id,created_at,totale,prodotti,dettagli,tipo_ordine,stato').in('id',st.rows.map(x=>x.id));if(!r.error&&r.data)st.rows=r.data;}
+  else{await gustoLoadOnlineOrders();const r=await sb.from('ordini').select('id,totale,prodotti,dettagli,tipo_ordine,stato,cliente_nome').eq('id',canonical.id).single();if(!r.error&&r.data)st.rows=[r.data];}
+  alert('Quota registrata: '+gustoRomanEuro(payment.importo)+' · '+method+'. La comanda rimane aperta.');
+  gustoRomanRender();
+ }catch(e){alert('Errore nel salvataggio della quota: '+(e.message||'errore Supabase'));}
+}
+async function gustoRomanComplete(){
+ const st=gustoRomanState;if(!st||!user||!sb)return alert('Sessione non disponibile.');
+ const ledger=gustoSplitLedger(st),paid=ledger.reduce((n,p)=>n+(Number(p.importo)||0),0);
+ if(paid<st.total-0.01)return alert('Non puoi completare: restano quote da pagare.');
+ const methods=[...new Set(ledger.map(p=>p.metodo).filter(Boolean))];
+ try{await gustoFinalizePaidOrder(st,ledger,paid,methods);gustoRomanClose();if(!st.table)await gustoLoadOnlineOrders();if(typeof gustoLoadDailyHistory==='function')await gustoLoadDailyHistory();alert('Comanda completata. Tavolo liberato oppure ordine rimosso dagli ordini attivi e trasferito nello storico.');}
+ catch(e){alert('Errore durante la chiusura della comanda: '+(e.message||'errore Supabase'));}
+}
+async function gustoOpenRomanPaymentForOrder(id){
+ if(!user||!sb)return alert('Accedi al Comandiere.');
+ try{const {data,error}=await sb.from('ordini').select('id,totale,prodotti,dettagli,tipo_ordine,stato,cliente_nome').eq('id',id).single();if(error)throw error;
+ const d=gustoSplitDetails(data),fee=gustoOnlineServiceClass(data)==='service-delivery'?Math.max(0,Number(d.gustoConto?.consegnaConto??2)):0,total=Number(d.gustoConto?.totaleModificato??data.totale??0)+fee;
+ gustoRomanOpen({rows:[data],label:(data.tipo_ordine||'Ordine')+' · '+(data.cliente_nome||'#'+id),total,table:false});
+ }catch(e){alert('Non riesco ad aprire Alla romana: '+(e.message||'errore'));}
+}
+async function gustoOpenRomanPaymentForTable(tableNo){
+ if(!user||!sb)return alert('Accedi al Comandiere.');
+ /* Il controllo conto viene chiuso immediatamente: resta visibile solo la procedura di pagamento. */
+ gustoCloseBillEditorForSplit();
+ try{const t=tables.find(x=>Number(x.number)===Number(tableNo));if(!t)throw new Error('Tavolo non trovato');
+ const {data,error}=await sb.from('ordini').select('id,created_at,totale,prodotti,dettagli,tipo_ordine,stato').eq('tipo_ordine','Comanda al tavolo').gte('created_at',CLEAN_START).order('created_at',{ascending:true}).limit(300);if(error)throw error;
+ const rows=(data||[]).filter(o=>{const d=gustoSplitDetails(o);return String(d.comandaSession||'')===String(t.sessionId)&&String(d.tableNumber??'')===String(tableNo)&&!d.servizioChiuso&&!d.servizioAnnullato;});
+ if(!rows.length)throw new Error('Nessuna comanda attiva trovata per il tavolo.');
+ const total=rows.reduce((n,o)=>n+(Number(o.totale)||0),0);gustoRomanOpen({rows,label:'Tavolo '+tableNo,total,table:true,tableNo:Number(tableNo),sessionId:t.sessionId});
+ }catch(e){alert('Non riesco ad aprire Alla romana: '+(e.message||'errore'));}
+}
+
 </script>
 
 
