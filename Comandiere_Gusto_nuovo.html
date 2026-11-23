@@ -870,16 +870,44 @@ const byNum=n=>tables.find(x=>Number(x.number)===Number(n));const seen=new Set()
 // Mantiene eventuali unioni manuali già salvate, senza duplicare i tavoli nascosti.
 tables.forEach(t=>{if(t.groupHiddenBy&&!byNum(t.groupHiddenBy))t.groupHiddenBy=null;if(!t.groupHiddenBy&&t.groupNumbers?.length>1)t.label='Tavoli '+t.groupNumbers.join('.');else if(!t.groupHiddenBy)t.label=`${tableAreaLabel(t.number)} · Tavolo ${t.number}`;});saveTables();$('tableQty').value=qty;renderTables();renderReservationTables()}
 async function reconcileRestoredTableSessions(){
- // Verifica non distruttiva: una sessione assente dai risultati Supabase
- // NON dimostra che il tavolo sia chiuso. La ricerca può essere incompleta
- // (limite righe, rete, permessi o metadati mancanti). Lo stato locale viene
- // cancellato esclusivamente dalla normale procedura esplicita di chiusura.
  if(!sb||!user)return;
  try{
-  const {error}=await sb.from('ordini').select('id').eq('tipo_ordine','Comanda al tavolo').gte('created_at',CLEAN_START).limit(1);
-  if(error)console.warn('Verifica remota sessioni tavoli non disponibile; mantengo intatto lo stato locale:',error.message||error);
+  const since=new Date(Date.now()-36*60*60*1000).toISOString();
+  const {data:rows,error}=await sb.from('ordini').select('id,created_at,totale,dettagli,prodotti,stato').eq('tipo_ordine','Comanda al tavolo').gte('created_at',since).order('created_at',{ascending:true}).limit(500);
+  if(error)throw error;
+  if((rows||[]).length>=500){console.warn('Ripristino tavoli sospeso: troppe righe per una verifica completa. Nessuno stato modificato.');return;}
+  const sessions=new Map();
+  for(const row of rows||[]){
+   let d=row.dettagli;try{if(typeof d==='string')d=JSON.parse(d||'{}')}catch(e){continue}
+   if(!d||d.servizioChiuso||d.servizioAnnullato||d.isTableReservation)continue;
+   const status=String(row.stato||'').toLocaleLowerCase('it-IT');
+   if(['annullato','cancellato','consegnato','ritirato','completato','prenotazione annullata','prenotazione liberata'].includes(status))continue;
+   const tableNo=Number(d.tableNumber),session=String(d.comandaSession||'');
+   if(!Number.isInteger(tableNo)||tableNo<1||!session)continue;
+   const key=tableNo+'|'+session;
+   if(!sessions.has(key))sessions.set(key,{tableNo,session,rows:[]});
+   sessions.get(key).rows.push({row,d});
+  }
+  let restored=0;
+  for(const entry of sessions.values()){
+   const t=tables.find(x=>Number(x.number)===entry.tableNo);
+   if(!t||t.sessionId)continue;
+   const latest=entry.rows[entry.rows.length-1];
+   const first=entry.rows[0];
+   t.sessionId=entry.session;
+   t.hasSent=true;
+   t.covers=Math.max(1,Number(first.d.covers)||2);
+   t.orderNumber=Math.max(1,...entry.rows.map(x=>Number(x.d.comandaNumero)||1));
+   t.lastOrderId=latest.row.id;
+   t.openedAt=first.row.created_at||null;
+   t.orderCodes=entry.rows.map(x=>x.d.code).filter(Boolean);
+   t.items=t.items&&typeof t.items==='object'?t.items:{};
+   t.stages=Array.isArray(t.stages)?t.stages:[];
+   restored++;
+  }
+  if(restored){saveTables();renderTables();console.info('Ripristinati servizi tavolo da Supabase:',restored);}
  }catch(e){
-  console.warn('Verifica remota sessioni tavoli non riuscita; stato locale conservato:',e.message||e);
+  console.warn('Ripristino remoto dei tavoli non riuscito; lo stato locale è stato conservato:',e.message||e);
  }
 }
 function tableBusy(t){return !!(t&&t.sessionId&&t.hasSent)}
