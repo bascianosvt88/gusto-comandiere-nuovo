@@ -7,6 +7,7 @@ name: Build Gusto Comandiere APK
     branches:
       - main
       - principale
+      - fix-comandiere-ripristino-tavoli
 
 permissions:
   contents: read
