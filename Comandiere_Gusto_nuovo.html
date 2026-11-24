@@ -855,6 +855,7 @@ let previousReadySignature='';
 // Abilita il via alla portata successiva solo dopo che il cameriere ha confermato il ritiro/visione dei prodotti pronti.
 const courseReleaseReadyByTable={};
 let user=null,staffName='',products=seedProducts.filter(p=>p.available!==false&&Number(p.price)>=0),tables=[],readyDishesByTable={},drinkOrdersByTable={},serviceSummaryByTable={},kitchenCallsByTable={},activeTable=null,category='',cart={},covers=2,stages=[],sessionId='',orderNumber=1,existingCover=0,hasSent=false,activePickerCourse='Bevande';
+let gustoOrdersRealtimeChannel=null,gustoOrdersRealtimeRefreshTimer=null;
 const $=id=>document.getElementById(id);const euro=n=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(Number(n)||0);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let selectedTableArea='sala';
 let gustoSharedLocaleConfig=null;
@@ -1940,8 +1941,50 @@ function gustoStartCatalogAutoSync(){
 if(!window.gustoCatalogFocusSyncBound){window.gustoCatalogFocusSyncBound=true;}
 async function login(){try{if(!window.supabase?.createClient)return showLoginError('Servizio di accesso non caricato. Verifica la connessione Internet e riapri il file.');if(!sb)return showLoginError('Connessione al servizio di accesso non inizializzata. Chiudi e riapri il file con Internet attivo.');let email=$('email').value.trim(),password=$('password').value;if(!email||!password)return showLoginError('Inserisci email e password.');$('loginMsg').classList.add('hidden');$('loginBtn').disabled=true;$('loginBtn').textContent='Accesso in corso…';let {data,error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;let {data:ud,error:ue}=await sb.auth.getUser();if(ue||!ud.user)throw ue||new Error('Accesso effettuato ma utente non verificato. Riprova.');let u=ud.user;let allowed=u.id===OWNER_UID||u.app_metadata?.role==='dipendente'||u.app_metadata?.role==='staff';if(!allowed){await sb.auth.signOut();throw new Error('Account non autorizzato al Comandiere. Chiedi al titolare di abilitare il ruolo operatore.');}user=u;staffName=u.user_metadata?.full_name||u.user_metadata?.nome||u.email||'Operatore';enterApp()}catch(e){console.error('Errore accesso Comandiere:',e);showLoginError(e.message||'Accesso non riuscito. Controlla la connessione e riprova.')}finally{if($('loginBtn')){$('loginBtn').disabled=false;$('loginBtn').textContent='Accedi al comandiere'}}}
 function showLoginError(msg){$('loginMsg').textContent=msg;$('loginMsg').classList.remove('hidden');$('loginMsg').classList.add('err')}
-function enterApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');gustoStartCatalogAutoSync();refreshDrinkChecklist();refreshServiceSummaries();$('who').innerHTML=`${esc(staffName)}<br><button style="padding:4px 8px;margin-top:4px" onclick="logout()">Esci</button>`;restoreTables();reconcileRestoredTableSessions();restoreDraftState();refreshKitchenCalls();refreshReadyDishes();gustoLoadOnlineOrders();loadRemoteTableReservations();if(reservationPollTimer)clearInterval(reservationPollTimer);reservationPollTimer=setInterval(loadRemoteTableReservations,300000);$('setupWarning').classList.remove('hidden');$('setupWarning').innerHTML='<strong>Prima versione di prova.</strong> Login e inserimento su Supabase sono collegati. La condivisione in tempo reale delle tavolate e la registrazione persistente delle conferme uscita richiedono autorizzazioni database dedicate: in questa versione non sono ancora attive.'}
-async function logout(){if(gustoCatalogSyncTimer){clearInterval(gustoCatalogSyncTimer);gustoCatalogSyncTimer=null;}if(gustoCatalogRealtimeChannel){try{await sb.removeChannel(gustoCatalogRealtimeChannel)}catch{}gustoCatalogRealtimeChannel=null;}if(activeTable){activeTable.covers=covers;activeTable.stages=stages;saveTables()}await sb.auth.signOut();user=null;activeTable=null;$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');$('who').textContent='Accesso operatore'}
+function gustoScheduleOrdersRealtimeRefresh(payload){
+ if(!user)return;
+ // Un aggiornamento cucina invalida subito la cache condivisa: altrimenti
+ // lo snapshot potrebbe restituire per 2,5 secondi i dati precedenti.
+ window.gustoTableOrdersSnapshotCache=null;
+ if(gustoOrdersRealtimeRefreshTimer)clearTimeout(gustoOrdersRealtimeRefreshTimer);
+ gustoOrdersRealtimeRefreshTimer=setTimeout(async()=>{
+  gustoOrdersRealtimeRefreshTimer=null;
+  if(!user)return;
+  try{
+   await Promise.allSettled([
+    refreshReadyDishes(),
+    refreshKitchenCalls(),
+    refreshDrinkChecklist(),
+    refreshServiceSummaries(),
+    gustoLoadOnlineOrders()
+   ]);
+  }catch(e){console.warn('Aggiornamento Realtime Comandiere non riuscito:',e);}
+ },180);
+}
+function gustoStartOrdersRealtime(){
+ if(!sb||!user)return;
+ if(gustoOrdersRealtimeChannel){try{sb.removeChannel(gustoOrdersRealtimeChannel)}catch{}gustoOrdersRealtimeChannel=null;}
+ try{
+  gustoOrdersRealtimeChannel=sb.channel('gusto-comandiere-ordini-live')
+   .on('postgres_changes',{event:'*',schema:'public',table:'ordini'},payload=>{
+    gustoScheduleOrdersRealtimeRefresh(payload);
+   })
+   .subscribe(status=>{
+    if(status==='SUBSCRIBED'){
+     console.info('Realtime ordini/cucina attivo nel Comandiere.');
+     gustoScheduleOrdersRealtimeRefresh({eventType:'SYNC'});
+    }else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){
+     console.warn('Realtime ordini non disponibile; resta attivo il controllo periodico.',status);
+    }
+   });
+ }catch(e){console.warn('Avvio Realtime ordini non riuscito; resta attivo il controllo periodico:',e);}
+}
+async function gustoStopOrdersRealtime(){
+ if(gustoOrdersRealtimeRefreshTimer){clearTimeout(gustoOrdersRealtimeRefreshTimer);gustoOrdersRealtimeRefreshTimer=null;}
+ if(gustoOrdersRealtimeChannel){try{await sb.removeChannel(gustoOrdersRealtimeChannel)}catch(e){console.warn('Chiusura canale Realtime non riuscita:',e)}gustoOrdersRealtimeChannel=null;}
+}
+function enterApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');gustoStartCatalogAutoSync();gustoStartOrdersRealtime();refreshDrinkChecklist();refreshServiceSummaries();$('who').innerHTML=`${esc(staffName)}<br><button style="padding:4px 8px;margin-top:4px" onclick="logout()">Esci</button>`;restoreTables();reconcileRestoredTableSessions();restoreDraftState();refreshKitchenCalls();refreshReadyDishes();gustoLoadOnlineOrders();loadRemoteTableReservations();if(reservationPollTimer)clearInterval(reservationPollTimer);reservationPollTimer=setInterval(loadRemoteTableReservations,300000);$('setupWarning').classList.remove('hidden');$('setupWarning').innerHTML='<strong>Prima versione di prova.</strong> Login e inserimento su Supabase sono collegati. Gli aggiornamenti di ordini e stato cucina usano Supabase Realtime; se il database non li rende disponibili resta attivo il controllo automatico periodico. La condivisione delle tavolate e la registrazione persistente delle conferme uscita richiedono autorizzazioni dedicate.'}
+async function logout(){await gustoStopOrdersRealtime();if(gustoCatalogSyncTimer){clearInterval(gustoCatalogSyncTimer);gustoCatalogSyncTimer=null;}if(gustoCatalogRealtimeChannel){try{await sb.removeChannel(gustoCatalogRealtimeChannel)}catch{}gustoCatalogRealtimeChannel=null;}if(activeTable){activeTable.covers=covers;activeTable.stages=stages;saveTables()}await sb.auth.signOut();user=null;activeTable=null;$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');$('who').textContent='Accesso operatore'}
 
 async function requestNextCourseForTable(tableNumber,event){
  if(event){event.preventDefault();event.stopPropagation();}
